@@ -174,8 +174,12 @@
         .admin-table th { background: #f5f0ff; color: #2c3e50; padding: 1rem; text-align: left; font-size: 0.9rem; border-bottom: 2px solid #e0d4f5; white-space: nowrap; }
         .admin-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; }
         .admin-table tr:hover td { background: #faf8ff; }
+        
+        /* Статусы */
         .status-new { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .status-progress { background: #cce5ff; color: #004085; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
         .status-done { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        
         .no-orders { text-align: center; padding: 3rem; color: #999; font-size: 1.1rem; }
         .btn-delete { background: #ff4757; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; }
         .btn-delete:hover { background: #ff6b81; }
@@ -326,7 +330,7 @@
 
     <div class="admin-overlay" id="adminOverlay">
         <div class="admin-login">
-            <h3>🔐 Вход в админ-панель</h3>
+            <h3> Вход в админ-панель</h3>
             <p class="error" id="loginError">Неверный пароль!</p>
             <input type="password" id="adminPassword" placeholder="Введите пароль" autocomplete="off">
             <br>
@@ -353,6 +357,10 @@
                 <div class="stat-card">
                     <div class="number" id="newOrders">0</div>
                     <div class="label">Новых</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="progressOrders">0</div>
+                    <div class="label">В процессе</div>
                 </div>
             </div>
             <div class="admin-table-wrapper">
@@ -383,9 +391,7 @@
         const ADMIN_PASSWORD = 't0gether'; 
         const EMAIL_URL = 'https://formsubmit.co/a1945rud@gmail.com';
 
-        // ==========================================
-        // ПРОВЕРКА URL НА /?admin ПРИ ЗАГРУЗКЕ
-        // ==========================================
+        // Проверка URL на /?admin при загрузке
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('admin')) {
@@ -396,9 +402,6 @@
             }
         });
 
-        // ==========================================
-        // МОДАЛЬНОЕ ОКНО УСПЕХА
-        // ==========================================
         function showSuccessModal() {
             const modal = document.getElementById('successModal');
             modal.style.display = 'flex';
@@ -415,9 +418,6 @@
             if (e.target === this) closeSuccessModal();
         });
 
-        // ==========================================
-        // ЛОГИКА ДОЛГОГО НАЖАТИЯ (15 СЕКУНД)
-        // ==========================================
         let pressTimer;
         let adminOpened = false;
         const HOLD_DURATION = 15000;
@@ -460,9 +460,6 @@
             });
         });
 
-        // ==========================================
-        // НАВИГАЦИЯ
-        // ==========================================
         const mainNav = document.getElementById('mainNav');
         const navArrow = document.getElementById('navArrow');
         const floatingToggle = document.getElementById('floatingToggle');
@@ -486,9 +483,6 @@
             });
         });
 
-        // ==========================================
-        // ОТПРАВКА ЗАКАЗА
-        // ==========================================
         const orderForm = document.getElementById('orderForm');
         const submitBtn = document.getElementById('submitBtn');
         const submitStatus = document.getElementById('submitStatus');
@@ -527,9 +521,7 @@
             let sheetSuccess = false;
 
             try {
-                showStatus(' Сохранение в таблицу...', 'loading');
-                console.log('📊 Шаг 1: Отправка в SheetDB...');
-                
+                showStatus('⏳ Сохранение в таблицу...', 'loading');
                 const sheetResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 
@@ -539,18 +531,14 @@
                     body: JSON.stringify({ data: orderData })
                 });
 
-                console.log('📊 Ответ SheetDB:', sheetResponse.status);
-
                 if (sheetResponse.ok) {
                     sheetSuccess = true;
-                    console.log('✅ Заказ сохранён в Google Sheets');
+                    console.log('✅ Заказ сохранён');
                 } else {
-                    const errorText = await sheetResponse.text();
-                    console.error('❌ Ошибка SheetDB:', errorText);
-                    throw new Error(`SheetDB вернул ошибку: ${sheetResponse.status}`);
+                    throw new Error(`SheetDB ошибка: ${sheetResponse.status}`);
                 }
             } catch (error) {
-                console.error('❌ Ошибка:', error);
+                console.error(' Ошибка:', error);
                 showStatus(`❌ Ошибка: ${error.message}`, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Отправить заказ';
@@ -558,7 +546,7 @@
             }
 
             try {
-                showStatus('⏳ Отправка на почту...', 'loading');
+                showStatus(' Отправка на почту...', 'loading');
                 const formData = new FormData();
                 formData.append('name', orderData.name);
                 formData.append('email', orderData.email);
@@ -591,9 +579,6 @@
             submitBtn.textContent = 'Отправить заказ';
         });
 
-        // ==========================================
-        // АДМИН-ПАНЕЛЬ
-        // ==========================================
         function openAdminLogin() {
             document.getElementById('adminOverlay').classList.add('active');
             document.getElementById('adminPassword').focus();
@@ -629,9 +614,6 @@
             document.getElementById('adminPanel').classList.remove('active');
         }
 
-        // ==========================================
-        // ЗАГРУЗКА ЗАКАЗОВ (с фильтрацией дубликатов)
-        // ==========================================
         async function loadOrders() {
             const tbody = document.getElementById('ordersTableBody');
             tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
@@ -654,38 +636,56 @@
                     }
                 });
                 
-                const uniqueOrders = Array.from(uniqueMap.values());
-                console.log('✅ Уникальных заказов:', uniqueOrders.length);
+                // Фильтрация удаленных заказов
+                const activeOrders = Array.from(uniqueMap.values()).filter(order => {
+                    return order.deleted !== 'true' && order.status !== 'Удален';
+                });
+                
+                console.log('✅ Активных заказов:', activeOrders.length);
 
-                document.getElementById('totalOrders').textContent = uniqueOrders.length;
-                document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
+                document.getElementById('totalOrders').textContent = activeOrders.length;
+                document.getElementById('newOrders').textContent = activeOrders.filter(o => o.status === 'Новый').length;
+                document.getElementById('progressOrders').textContent = activeOrders.filter(o => o.status === 'В процессе').length;
 
-                if (uniqueOrders.length === 0) {
+                if (activeOrders.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
                     return;
                 }
 
-                uniqueOrders.reverse();
+                activeOrders.reverse();
 
-                tbody.innerHTML = uniqueOrders.map((order, index) => `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td style="white-space:nowrap;">${order.date || '—'}</td>
-                        <td><strong>${escapeHtml(order.name || '')}</strong></td>
-                        <td>${escapeHtml(order.email || '')}</td>
-                        <td>${escapeHtml(order.phone || '—')}</td>
-                        <td>${escapeHtml(order.service || '')}</td>
-                        <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
-                        <td>
-                            <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
-                                  style="cursor:pointer;" 
-                                  onclick="toggleStatus('${order.id}', '${order.status}')">
-                                ${order.status === 'Новый' ? '🆕 Новый' : '✅ Готов'}
-                            </span>
-                        </td>
-                        <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
-                    </tr>
-                `).join('');
+                tbody.innerHTML = activeOrders.map((order, index) => {
+                    let statusClass = 'status-new';
+                    let statusText = '🆕 Новый';
+                    
+                    if (order.status === 'В процессе') {
+                        statusClass = 'status-progress';
+                        statusText = '⚙️ В процессе';
+                    } else if (order.status === 'Готов') {
+                        statusClass = 'status-done';
+                        statusText = '✅ Готов';
+                    }
+                    
+                    return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="white-space:nowrap;">${order.date || '—'}</td>
+                            <td><strong>${escapeHtml(order.name || '')}</strong></td>
+                            <td>${escapeHtml(order.email || '')}</td>
+                            <td>${escapeHtml(order.phone || '—')}</td>
+                            <td>${escapeHtml(order.service || '')}</td>
+                            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
+                            <td>
+                                <span class="${statusClass}" 
+                                      style="cursor:pointer;" 
+                                      onclick="toggleStatus('${order.id}', '${order.status}')">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
+                        </tr>
+                    `;
+                }).join('');
 
             } catch (error) {
                 console.error('❌ Ошибка загрузки:', error);
@@ -693,16 +693,21 @@
             }
         }
 
-        // ==========================================
-        // ОБНОВЛЕНИЕ СТАТУСА (через добавление новой записи)
-        // ==========================================
+        // Циклическое переключение статусов: Новый → В процессе → Готов → Новый
         async function toggleStatus(id, currentStatus) {
-            const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
+            let newStatus;
+            
+            if (currentStatus === 'Новый') {
+                newStatus = 'В процессе';
+            } else if (currentStatus === 'В процессе') {
+                newStatus = 'Готов';
+            } else {
+                newStatus = 'Новый';
+            }
             
             console.log('🔄 Обновление статуса:', {id, currentStatus, newStatus});
             
             try {
-                // Получаем все заказы
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
                 
@@ -714,7 +719,6 @@
                     return;
                 }
                 
-                // Обновляем статус и добавляем как новую запись
                 order.status = newStatus;
                 order.date = new Date().toLocaleString('ru-RU');
                 
@@ -745,16 +749,12 @@
             }
         }
 
-        // ==========================================
-        // УДАЛЕНИЕ ЗАКАЗА (через добавление флага)
-        // ==========================================
         async function deleteOrder(id) {
             if (!confirm('Удалить этот заказ?')) return;
             
             console.log('🗑️ Удаление:', id);
             
             try {
-                // Получаем заказ
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
                 
@@ -766,10 +766,12 @@
                     return;
                 }
                 
-                // Помечаем как удаленный (добавляем новую запись с флагом)
-                order.status = 'Удален';
+                // Помечаем как удаленный
                 order.deleted = 'true';
+                order.status = 'Удален';
                 order.date = new Date().toLocaleString('ru-RU');
+                
+                console.log(' Отправка удаления:', order);
                 
                 const deleteResponse = await fetch(API_URL, {
                     method: 'POST',
@@ -780,11 +782,14 @@
                     body: JSON.stringify({ data: order })
                 });
                 
+                console.log('📥 Ответ:', deleteResponse.status);
+                
                 if (deleteResponse.ok) {
                     console.log('✅ Удалено!');
                     loadOrders();
                 } else {
-                    throw new Error(`Ошибка ${deleteResponse.status}`);
+                    const errorText = await deleteResponse.text();
+                    throw new Error(`Ошибка ${deleteResponse.status}: ${errorText}`);
                 }
                 
             } catch (error) {
