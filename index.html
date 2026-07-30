@@ -654,7 +654,7 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
             }
         }
 
-        async function toggleStatus(id, currentStatus) {
+async function toggleStatus(id, currentStatus) {
     const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
     
     try {
@@ -664,44 +664,33 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
         
         const orders = await response.json();
         
-        // Ищем заказ (пробуем и число, и строку)
-        const order = orders.find(o => 
+        // Ищем заказ
+        const orderIndex = orders.findIndex(o => 
             o.id == id || String(o.id) === String(id)
         );
         
-        if (!order) {
+        if (orderIndex === -1) {
             alert('Заказ не найден в таблице');
             return;
         }
         
-        // Удаляем старый заказ
-        const deleteResponse = await fetch(`${API_URL}?id=${order.id}`, { 
-            method: 'DELETE' 
-        });
+        // Обновляем статус в массиве
+        orders[orderIndex].status = newStatus;
         
-        if (!deleteResponse.ok) {
-            throw new Error('Не удалось удалить старую запись');
-        }
-        
-        // Добавляем новый с измененным статусом
-        const newOrder = {
-            ...order,
-            status: newStatus
-        };
-        
-        const addResponse = await fetch(API_URL, {
-            method: 'POST',
+        // Отправляем обновленный заказ через PUT
+        const updateResponse = await fetch(`${API_URL}?id=${orders[orderIndex].id}`, {
+            method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ data: newOrder })
+            body: JSON.stringify({ data: orders[orderIndex] })
         });
         
-        if (addResponse.ok) {
+        if (updateResponse.ok) {
             loadOrders();
         } else {
-            throw new Error('Не удалось добавить обновленную запись');
+            throw new Error(`Ошибка обновления: ${updateResponse.status}`);
         }
         
     } catch (error) {
@@ -709,7 +698,6 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
         alert('Ошибка обновления: ' + error.message);
     }
 }
-
 async function deleteOrder(id) {
     if (!confirm('Удалить этот заказ из Google Таблицы?')) return;
     
