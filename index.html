@@ -608,59 +608,79 @@
             document.getElementById('adminPanel').classList.remove('active');
         }
 
-        async function loadOrders() {
-            const tbody = document.getElementById('ordersTableBody');
-            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных из Google Sheets...</td></tr>';
+async function loadOrders() {
+    const tbody = document.getElementById('ordersTableBody');
+    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
 
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Ошибка API');
-                const orders = await response.json();
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Ошибка API');
+        let orders = await response.json();
 
-                document.getElementById('totalOrders').textContent = orders.length;
-                document.getElementById('newOrders').textContent = orders.filter(o => o.status === 'Новый').length;
-
-                if (orders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
-                    return;
-                }
-
-                orders.reverse();
-
-                tbody.innerHTML = orders.map((order, index) => `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td style="white-space:nowrap;">${order.date || '—'}</td>
-                        <td><strong>${escapeHtml(order.name || '')}</strong></td>
-                        <td>${escapeHtml(order.email || '')}</td>
-                        <td>${escapeHtml(order.phone || '—')}</td>
-                        <td>${escapeHtml(order.service || '')}</td>
-                        <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
-                        <td>
-                            <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
-                                  style="cursor:pointer;" 
-                                  onclick="toggleStatus('${order.id}', '${order.status}')">
-                                ${order.status === 'Новый' ? '🆕 Новый' : '✅ Готов'}
-                            </span>
-                        </td>
-                        <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error(error);
-                tbody.innerHTML = '<tr><td colspan="9" class="no-orders" style="color:red;">Ошибка загрузки. Проверьте API и столбец "id".</td></tr>';
+        // Убираем дубликаты (оставляем последние версии)
+        const uniqueOrders = [];
+        const seenIds = new Map();
+        
+        orders.forEach(order => {
+            const id = order.id;
+            if (!seenIds.has(id) || seenIds.get(id) < order.date) {
+                seenIds.set(id, order.date);
             }
+        });
+        
+        // Берем только последние версии
+        orders.forEach(order => {
+            if (seenIds.get(order.id) === order.date) {
+                uniqueOrders.push(order);
+            }
+        });
+
+        document.getElementById('totalOrders').textContent = uniqueOrders.length;
+        document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
+
+        if (uniqueOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
+            return;
         }
 
+        uniqueOrders.reverse();
+
+        tbody.innerHTML = uniqueOrders.map((order, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td style="white-space:nowrap;">${order.date || '—'}</td>
+                <td><strong>${escapeHtml(order.name || '')}</strong></td>
+                <td>${escapeHtml(order.email || '')}</td>
+                <td>${escapeHtml(order.phone || '—')}</td>
+                <td>${escapeHtml(order.service || '')}</td>
+                <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
+                <td>
+                    <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
+                          style="cursor:pointer;" 
+                          onclick="toggleStatus('${order.id}', '${order.status}')">
+                        ${order.status === 'Новый' ? ' Новый' : '✅ Готов'}
+                    </span>
+                </td>
+                <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        console.error(error);
+        tbody.innerHTML = '<tr><td colspan="9" class="no-orders" style="color:red;">Ошибка загрузки.</td></tr>';
+    }
+}
 async function toggleStatus(id, currentStatus) {
     const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
     
     try {
+        // Получаем все заказы
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Ошибка получения данных');
         
-        const orders = await response.json();
+        let orders = await response.json();
+        
+        // Ищем заказ
         const order = orders.find(o => String(o.id) === String(id));
         
         if (!order) {
@@ -668,19 +688,24 @@ async function toggleStatus(id, currentStatus) {
             return;
         }
         
+        // Обновляем статус и добавляем как новую запись
         order.status = newStatus;
         
-        const updateResponse = await fetch(`${API_URL}?id=${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+        const addResponse = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify({ data: order })
         });
         
-        if (updateResponse.ok) {
+        if (addResponse.ok) {
             loadOrders();
         } else {
-            throw new Error('Ошибка обновления');
+            throw new Error('Не удалось сохранить');
         }
+        
     } catch (error) {
         alert('Ошибка: ' + error.message);
     }
