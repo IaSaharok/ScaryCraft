@@ -234,7 +234,7 @@
                     <div class="price">от 500 ₽</div>
                 </div>
                 <div class="service-card">
-                    <h3>️ Установка модов</h3>
+                    <h3>⚙️ Установка модов</h3>
                     <p>Установка и настройка модов, плагинов, создание модпаков под ваши требования</p>
                     <div class="price">от 900 ₽</div>
                 </div>
@@ -300,7 +300,7 @@
                 <div class="submit-status" id="submitStatus"></div>
                 
                 <div class="form-note">
-                    <strong> Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
+                    <strong>📞 Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
                 </div>
             </form>
         </div>
@@ -309,8 +309,8 @@
     <footer id="contact">
         <div class="container">
             <h3>Контакты</h3>
-            <p> Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
-            <p> Телефон: <a href="tel:+79953950115">+7 (995) 395-01-15</a></p>
+            <p>📧 Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
+            <p>📱 Телефон: <a href="tel:+79953950115">+7 (995) 395-01-15</a></p>
             <p style="margin-top: 2rem;">© 2026 Minecraft Услуги. Все права защищены.</p>
         </div>
     </footer>
@@ -340,7 +340,7 @@
         <div class="admin-header">
             <h2>📋 Панель заказов</h2>
             <div>
-                <button class="admin-close" onclick="loadOrders()"> Обновить</button>
+                <button class="admin-close" onclick="loadOrders()">🔄 Обновить</button>
                 <button class="admin-close" onclick="closeAdminPanel()">✕ Закрыть</button>
             </div>
         </div>
@@ -379,10 +379,26 @@
     </div>
 
     <script>
-const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://sheetdb.io/api/v1/3u128ld6pkti1');
+        const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
         const ADMIN_PASSWORD = 't0gether'; 
         const EMAIL_URL = 'https://formsubmit.co/a1945rud@gmail.com';
 
+        // ==========================================
+        // ПРОВЕРКА URL НА /?admin ПРИ ЗАГРУЗКЕ
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin')) {
+                console.log('🔐 Обнаружен параметр ?admin в URL');
+                setTimeout(() => {
+                    openAdminLogin();
+                }, 500);
+            }
+        });
+
+        // ==========================================
+        // МОДАЛЬНОЕ ОКНО УСПЕХА
+        // ==========================================
         function showSuccessModal() {
             const modal = document.getElementById('successModal');
             modal.style.display = 'flex';
@@ -399,6 +415,9 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             if (e.target === this) closeSuccessModal();
         });
 
+        // ==========================================
+        // ЛОГИКА ДОЛГОГО НАЖАТИЯ (15 СЕКУНД)
+        // ==========================================
         let pressTimer;
         let adminOpened = false;
         const HOLD_DURATION = 15000;
@@ -441,6 +460,9 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             });
         });
 
+        // ==========================================
+        // НАВИГАЦИЯ
+        // ==========================================
         const mainNav = document.getElementById('mainNav');
         const navArrow = document.getElementById('navArrow');
         const floatingToggle = document.getElementById('floatingToggle');
@@ -464,6 +486,9 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             });
         });
 
+        // ==========================================
+        // ОТПРАВКА ЗАКАЗА
+        // ==========================================
         const orderForm = document.getElementById('orderForm');
         const submitBtn = document.getElementById('submitBtn');
         const submitStatus = document.getElementById('submitStatus');
@@ -477,14 +502,14 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             e.preventDefault();
             
             if (!orderForm.checkValidity()) {
-                showStatus(' Пожалуйста, заполните все обязательные поля (отмечены *)', 'error');
+                showStatus('❌ Пожалуйста, заполните все обязательные поля', 'error');
                 orderForm.reportValidity();
                 return;
             }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
-            showStatus(' Отправка заказа...', 'loading');
+            showStatus('⏳ Отправка заказа...', 'loading');
 
             const orderData = {
                 id: Date.now().toString(),
@@ -502,8 +527,8 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             let sheetSuccess = false;
 
             try {
-                showStatus('⏳ Сохранение в таблицу...', 'loading');
-                console.log(' Шаг 1: Отправка в SheetDB...');
+                showStatus(' Сохранение в таблицу...', 'loading');
+                console.log('📊 Шаг 1: Отправка в SheetDB...');
                 
                 const sheetResponse = await fetch(API_URL, {
                     method: 'POST',
@@ -514,7 +539,7 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
                     body: JSON.stringify({ data: orderData })
                 });
 
-                console.log(' Ответ SheetDB:', sheetResponse.status, sheetResponse.statusText);
+                console.log('📊 Ответ SheetDB:', sheetResponse.status);
 
                 if (sheetResponse.ok) {
                     sheetSuccess = true;
@@ -525,17 +550,15 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
                     throw new Error(`SheetDB вернул ошибку: ${sheetResponse.status}`);
                 }
             } catch (error) {
-                console.error('❌ Ошибка при сохранении в таблицу:', error);
-                showStatus(`❌ Ошибка сохранения в таблицу: ${error.message}. Проверьте интернет и API URL.`, 'error');
+                console.error('❌ Ошибка:', error);
+                showStatus(`❌ Ошибка: ${error.message}`, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Отправить заказ';
                 return;
             }
 
             try {
-                showStatus('⏳ Отправка уведомления на почту...', 'loading');
-                console.log('📧 Шаг 2: Отправка email через FormSubmit...');
-                
+                showStatus('⏳ Отправка на почту...', 'loading');
                 const formData = new FormData();
                 formData.append('name', orderData.name);
                 formData.append('email', orderData.email);
@@ -546,33 +569,31 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
                 formData.append('_captcha', 'false');
                 formData.append('_template', 'table');
 
-                const emailResponse = await fetch(EMAIL_URL, {
+                await fetch(EMAIL_URL, {
                     method: 'POST',
                     body: formData,
                     headers: { 'Accept': 'application/json' }
                 });
-
-                console.log(' Ответ FormSubmit:', emailResponse.status);
             } catch (error) {
-                console.warn('️ Ошибка отправки email:', error);
+                console.warn('⚠️ Ошибка email:', error);
             }
 
             if (sheetSuccess) {
                 showStatus('✅ Заказ успешно сохранён!', 'success');
                 showSuccessModal();
                 orderForm.reset();
-                
-                setTimeout(() => {
-                    submitStatus.style.display = 'none';
-                }, 5000);
+                setTimeout(() => { submitStatus.style.display = 'none'; }, 5000);
             } else {
-                showStatus('❌ Не удалось отправить заказ. Попробуйте позже.', 'error');
+                showStatus('❌ Не удалось отправить заказ', 'error');
             }
 
             submitBtn.disabled = false;
             submitBtn.textContent = 'Отправить заказ';
         });
 
+        // ==========================================
+        // АДМИН-ПАНЕЛЬ
+        // ==========================================
         function openAdminLogin() {
             document.getElementById('adminOverlay').classList.add('active');
             document.getElementById('adminPassword').focus();
@@ -608,147 +629,167 @@ const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http
             document.getElementById('adminPanel').classList.remove('active');
         }
 
-async function loadOrders() {
-    const tbody = document.getElementById('ordersTableBody');
-    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
+        // ==========================================
+        // ЗАГРУЗКА ЗАКАЗОВ (с фильтрацией дубликатов)
+        // ==========================================
+        async function loadOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
 
-    try {
-        console.log('📡 Загрузка заказов из:', API_URL);
-        
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-            throw new Error(`API вернул ошибку: ${response.status}`);
-        }
-        
-        let orders = await response.json();
-        console.log('✅ Получено заказов:', orders.length);
+            try {
+                console.log('📡 Загрузка из:', API_URL);
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                
+                let orders = await response.json();
+                console.log('✅ Получено заказов:', orders.length);
 
-        // Убираем дубликаты (оставляем последние версии по дате)
-        const uniqueOrdersMap = new Map();
-        
-        orders.forEach(order => {
-            const id = String(order.id);
-            const existingDate = uniqueOrdersMap.get(id);
-            
-            if (!existingDate || order.date > existingDate) {
-                uniqueOrdersMap.set(id, order);
+                // Фильтрация дубликатов - оставляем последнюю версию каждого id
+                const uniqueMap = new Map();
+                orders.forEach(order => {
+                    const id = String(order.id);
+                    const existing = uniqueMap.get(id);
+                    if (!existing || order.date > existing.date) {
+                        uniqueMap.set(id, order);
+                    }
+                });
+                
+                const uniqueOrders = Array.from(uniqueMap.values());
+                console.log('✅ Уникальных заказов:', uniqueOrders.length);
+
+                document.getElementById('totalOrders').textContent = uniqueOrders.length;
+                document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
+
+                if (uniqueOrders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
+                    return;
+                }
+
+                uniqueOrders.reverse();
+
+                tbody.innerHTML = uniqueOrders.map((order, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td style="white-space:nowrap;">${order.date || '—'}</td>
+                        <td><strong>${escapeHtml(order.name || '')}</strong></td>
+                        <td>${escapeHtml(order.email || '')}</td>
+                        <td>${escapeHtml(order.phone || '—')}</td>
+                        <td>${escapeHtml(order.service || '')}</td>
+                        <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
+                        <td>
+                            <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
+                                  style="cursor:pointer;" 
+                                  onclick="toggleStatus('${order.id}', '${order.status}')">
+                                ${order.status === 'Новый' ? '🆕 Новый' : '✅ Готов'}
+                            </span>
+                        </td>
+                        <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('❌ Ошибка загрузки:', error);
+                tbody.innerHTML = '<tr><td colspan="9" class="no-orders" style="color:red;">Ошибка: ' + error.message + '</td></tr>';
             }
-        });
-        
-        const uniqueOrders = Array.from(uniqueOrdersMap.values());
-        console.log('✅ Уникальных заказов:', uniqueOrders.length);
-
-        document.getElementById('totalOrders').textContent = uniqueOrders.length;
-        document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
-
-        if (uniqueOrders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
-            return;
         }
 
-        uniqueOrders.reverse();
+        // ==========================================
+        // ОБНОВЛЕНИЕ СТАТУСА (через добавление новой записи)
+        // ==========================================
+        async function toggleStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
+            
+            console.log('🔄 Обновление статуса:', {id, currentStatus, newStatus});
+            
+            try {
+                // Получаем все заказы
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                
+                const orders = await response.json();
+                const order = orders.find(o => String(o.id) === String(id));
+                
+                if (!order) {
+                    alert('Заказ не найден');
+                    return;
+                }
+                
+                // Обновляем статус и добавляем как новую запись
+                order.status = newStatus;
+                order.date = new Date().toLocaleString('ru-RU');
+                
+                console.log('📤 Отправка обновления:', order);
+                
+                const addResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ data: order })
+                });
+                
+                console.log(' Ответ:', addResponse.status);
+                
+                if (addResponse.ok) {
+                    console.log('✅ Обновлено!');
+                    loadOrders();
+                } else {
+                    const errorText = await addResponse.text();
+                    throw new Error(`Ошибка ${addResponse.status}: ${errorText}`);
+                }
+                
+            } catch (error) {
+                console.error('❌ Ошибка:', error);
+                alert('Ошибка обновления: ' + error.message);
+            }
+        }
 
-        tbody.innerHTML = uniqueOrders.map((order, index) => `
-            <tr>
-                <td>${index + 1}</td>
-                <td style="white-space:nowrap;">${order.date || '—'}</td>
-                <td><strong>${escapeHtml(order.name || '')}</strong></td>
-                <td>${escapeHtml(order.email || '')}</td>
-                <td>${escapeHtml(order.phone || '—')}</td>
-                <td>${escapeHtml(order.service || '')}</td>
-                <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
-                <td>
-                    <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
-                          style="cursor:pointer;" 
-                          onclick="toggleStatus('${order.id}', '${order.status}')">
-                        ${order.status === 'Новый' ? '🆕 Новый' : '✅ Готов'}
-                    </span>
-                </td>
-                <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
-            </tr>
-        `).join('');
-
-    } catch (error) {
-        console.error('❌ Ошибка загрузки:', error);
-        tbody.innerHTML = `<tr><td colspan="9" class="no-orders" style="color:red;">
-            Ошибка: ${error.message}<br>
-            Проверьте консоль (F12) для деталей
-        </td></tr>`;
-    }
-}
-
-async function toggleStatus(id, currentStatus) {
-    const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
-    
-    console.log('🔄 Попытка обновления:', {id, currentStatus, newStatus});
-    console.log('📡 API URL:', API_URL);
-    
-    try {
-        // Проверяем доступность API
-        const testResponse = await fetch(API_URL);
-        if (!testResponse.ok) {
-            throw new Error(`API недоступен: ${testResponse.status}`);
-        }
-        
-        let orders = await testResponse.json();
-        console.log('📊 Получено заказов:', orders.length);
-        
-        // Ищем заказ
-        const order = orders.find(o => String(o.id) === String(id));
-        
-        if (!order) {
-            alert('Заказ не найден. ID: ' + id);
-            return;
-        }
-        
-        // Обновляем статус
-        order.status = newStatus;
-        
-        console.log('📤 Отправка обновленного заказа:', order);
-        
-        const addResponse = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ data: order })
-        });
-        
-        console.log('📥 Ответ сервера:', addResponse.status, addResponse.statusText);
-        
-        if (addResponse.ok) {
-            console.log('✅ Успешно обновлено!');
-            loadOrders();
-        } else {
-            const errorText = await addResponse.text();
-            console.error('❌ Ошибка:', errorText);
-            throw new Error(`Ошибка ${addResponse.status}: ${errorText}`);
-        }
-        
-    } catch (error) {
-        console.error('❌ Полная ошибка:', error);
-        
-        if (error.message.includes('Failed to fetch')) {
-            alert(' Не удалось подключиться к серверу.\n\nПроверьте:\n1. Подключение к интернету\n2. CORS настройки SheetDB\n3. Правильность API URL');
-        } else {
-            alert('Ошибка: ' + error.message);
-        }
-    }
-}
+        // ==========================================
+        // УДАЛЕНИЕ ЗАКАЗА (через добавление флага)
+        // ==========================================
         async function deleteOrder(id) {
             if (!confirm('Удалить этот заказ?')) return;
             
+            console.log('🗑️ Удаление:', id);
+            
             try {
-                const response = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
+                // Получаем заказ
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
                 
-                if (response.ok) {
+                const orders = await response.json();
+                const order = orders.find(o => String(o.id) === String(id));
+                
+                if (!order) {
+                    alert('Заказ не найден');
+                    return;
+                }
+                
+                // Помечаем как удаленный (добавляем новую запись с флагом)
+                order.status = 'Удален';
+                order.deleted = 'true';
+                order.date = new Date().toLocaleString('ru-RU');
+                
+                const deleteResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ data: order })
+                });
+                
+                if (deleteResponse.ok) {
+                    console.log('✅ Удалено!');
                     loadOrders();
                 } else {
-                    throw new Error('Не удалось удалить');
+                    throw new Error(`Ошибка ${deleteResponse.status}`);
                 }
+                
             } catch (error) {
-                alert('Ошибка: ' + error.message);
+                console.error('❌ Ошибка:', error);
+                alert('Ошибка удаления: ' + error.message);
             }
         }
 
