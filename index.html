@@ -380,7 +380,7 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
     </div>
 
     <script>
-        const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxo6ln0IggwMViU7j4fb85L5_9X83w8aiyvODR56s51MPycq-Gso6d-dJA7oxf7R_pV5w/exec';
         const ADMIN_PASSWORD = 't0gether'; 
         const EMAIL_URL = 'https://formsubmit.co/a1945rud@gmail.com';
 
@@ -658,74 +658,52 @@ async function toggleStatus(id, currentStatus) {
     const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
     
     try {
-        // Получаем все заказы
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Ошибка получения данных');
         
         const orders = await response.json();
+        const order = orders.find(o => String(o.id) === String(id));
         
-        // Ищем заказ
-        const orderIndex = orders.findIndex(o => 
-            o.id == id || String(o.id) === String(id)
-        );
-        
-        if (orderIndex === -1) {
-            alert('Заказ не найден в таблице');
+        if (!order) {
+            alert('Заказ не найден');
             return;
         }
         
-        // Обновляем статус в массиве
-        orders[orderIndex].status = newStatus;
+        order.status = newStatus;
         
-        // Отправляем обновленный заказ через PUT
-        const updateResponse = await fetch(`${API_URL}?id=${orders[orderIndex].id}`, {
+        const updateResponse = await fetch(`${API_URL}?id=${id}`, {
             method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ data: orders[orderIndex] })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: order })
         });
         
         if (updateResponse.ok) {
             loadOrders();
         } else {
-            throw new Error(`Ошибка обновления: ${updateResponse.status}`);
+            throw new Error('Ошибка обновления');
         }
-        
     } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Ошибка обновления: ' + error.message);
+        alert('Ошибка: ' + error.message);
     }
 }
+
 async function deleteOrder(id) {
-    if (!confirm('Удалить этот заказ из Google Таблицы?')) return;
+    if (!confirm('Удалить этот заказ?')) return;
     
     try {
-        const response = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
+        const response = await fetch(`${API_URL}?id=${id}`, { 
+            method: 'DELETE' 
+        });
         
         if (response.ok) {
             loadOrders();
         } else {
-            // Если не получилось по id, пробуем найти и удалить по другим полям
-            const allResponse = await fetch(API_URL);
-            const orders = await allResponse.json();
-            const order = orders.find(o => o.id == id || String(o.id) === String(id));
-            
-            if (order) {
-                const deleteResponse = await fetch(`${API_URL}?id=${order.id}`, { 
-                    method: 'DELETE' 
-                });
-                
-                if (deleteResponse.ok) {
-                    loadOrders();
-                } else {
-                    throw new Error('Не удалось удалить');
-                }
-            } else {
-                throw new Error('Заказ не найден');
-            }
+            throw new Error('Ошибка удаления');
         }
+    } catch (error) {
+        alert('Ошибка: ' + error.message);
+    }
+}
     } catch (error) {
         console.error('Ошибка:', error);
         alert('Ошибка удаления: ' + error.message);
