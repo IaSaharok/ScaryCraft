@@ -332,8 +332,7 @@
             <br>
             <button class="btn" onclick="loginAdmin()" style="width:100%; padding:10px;">Войти</button>
             <br><br>
-            <button onclick="closeAdminLogin()"
-style="background:none; border:none; color:#999; cursor:pointer;">Отмена</button>
+            <button onclick="closeAdminLogin()" style="background:none; border:none; color:#999; cursor:pointer;">Отмена</button>
         </div>
     </div>
 
@@ -380,7 +379,7 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxo6ln0IggwMViU7j4fb85L5_9X83w8aiyvODR56s51MPycq-Gso6d-dJA7oxf7R_pV5w/exec';
+        const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
         const ADMIN_PASSWORD = 't0gether'; 
         const EMAIL_URL = 'https://formsubmit.co/a1945rud@gmail.com';
 
@@ -478,14 +477,14 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
             e.preventDefault();
             
             if (!orderForm.checkValidity()) {
-                showStatus(' Пожалуйста, заполните все обязательные поля (отмечены *)', 'error');
+                showStatus('❌ Пожалуйста, заполните все обязательные поля (отмечены *)', 'error');
                 orderForm.reportValidity();
                 return;
             }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
-            showStatus(' Отправка заказа...', 'loading');
+            showStatus('⏳ Отправка заказа...', 'loading');
 
             const orderData = {
                 id: Date.now().toString(),
@@ -504,7 +503,7 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
 
             try {
                 showStatus('⏳ Сохранение в таблицу...', 'loading');
-                console.log(' Шаг 1: Отправка в SheetDB...');
+                console.log('📊 Шаг 1: Отправка в SheetDB...');
                 
                 const sheetResponse = await fetch(API_URL, {
                     method: 'POST',
@@ -515,7 +514,7 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
                     body: JSON.stringify({ data: orderData })
                 });
 
-                console.log(' Ответ SheetDB:', sheetResponse.status, sheetResponse.statusText);
+                console.log('📊 Ответ SheetDB:', sheetResponse.status, sheetResponse.statusText);
 
                 if (sheetResponse.ok) {
                     sheetSuccess = true;
@@ -553,9 +552,9 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
                     headers: { 'Accept': 'application/json' }
                 });
 
-                console.log(' Ответ FormSubmit:', emailResponse.status);
+                console.log('📧 Ответ FormSubmit:', emailResponse.status);
             } catch (error) {
-                console.warn('️ Ошибка отправки email:', error);
+                console.warn('⚠️ Ошибка отправки email:', error);
             }
 
             if (sheetSuccess) {
@@ -704,12 +703,6 @@ async function deleteOrder(id) {
         alert('Ошибка: ' + error.message);
     }
 }
-    } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Ошибка удаления: ' + error.message);
-    }
-}
-
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
