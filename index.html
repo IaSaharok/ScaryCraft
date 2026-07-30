@@ -655,30 +655,94 @@ style="background:none; border:none; color:#999; cursor:pointer;">Отмена</
         }
 
         async function toggleStatus(id, currentStatus) {
-            const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
-            try {
-                const response = await fetch(`${API_URL}?id=${id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: { status: newStatus } })
-                });
-                if (response.ok) loadOrders();
-                else alert('Не удалось обновить статус. Проверьте столбец "id" в таблице.');
-            } catch (error) {
-                alert('Ошибка соединения.');
-            }
+    const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
+    
+    try {
+        // Получаем все заказы
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Ошибка получения данных');
+        
+        const orders = await response.json();
+        
+        // Ищем заказ (пробуем и число, и строку)
+        const order = orders.find(o => 
+            o.id == id || String(o.id) === String(id)
+        );
+        
+        if (!order) {
+            alert('Заказ не найден в таблице');
+            return;
         }
+        
+        // Удаляем старый заказ
+        const deleteResponse = await fetch(`${API_URL}?id=${order.id}`, { 
+            method: 'DELETE' 
+        });
+        
+        if (!deleteResponse.ok) {
+            throw new Error('Не удалось удалить старую запись');
+        }
+        
+        // Добавляем новый с измененным статусом
+        const newOrder = {
+            ...order,
+            status: newStatus
+        };
+        
+        const addResponse = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ data: newOrder })
+        });
+        
+        if (addResponse.ok) {
+            loadOrders();
+        } else {
+            throw new Error('Не удалось добавить обновленную запись');
+        }
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка обновления: ' + error.message);
+    }
+}
 
-        async function deleteOrder(id) {
-            if (!confirm('Удалить этот заказ из Google Таблицы?')) return;
-            try {
-                const response = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
-                if (response.ok) loadOrders();
-                else alert('Не удалось удалить. Проверьте столбец "id".');
-            } catch (error) {
-                alert('Ошибка при удалении.');
+async function deleteOrder(id) {
+    if (!confirm('Удалить этот заказ из Google Таблицы?')) return;
+    
+    try {
+        const response = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
+        
+        if (response.ok) {
+            loadOrders();
+        } else {
+            // Если не получилось по id, пробуем найти и удалить по другим полям
+            const allResponse = await fetch(API_URL);
+            const orders = await allResponse.json();
+            const order = orders.find(o => o.id == id || String(o.id) === String(id));
+            
+            if (order) {
+                const deleteResponse = await fetch(`${API_URL}?id=${order.id}`, { 
+                    method: 'DELETE' 
+                });
+                
+                if (deleteResponse.ok) {
+                    loadOrders();
+                } else {
+                    throw new Error('Не удалось удалить');
+                }
+            } else {
+                throw new Error('Заказ не найден');
             }
         }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка удаления: ' + error.message);
+    }
+}
 
         function escapeHtml(text) {
             const div = document.createElement('div');
