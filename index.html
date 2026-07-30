@@ -608,105 +608,134 @@
             document.getElementById('adminPanel').classList.remove('active');
         }
 
-        async function loadOrders() {
-            const tbody = document.getElementById('ordersTableBody');
-            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
+async function loadOrders() {
+    const tbody = document.getElementById('ordersTableBody');
+    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Загрузка данных...</td></tr>';
 
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Ошибка API');
-                let orders = await response.json();
-
-                // Убираем дубликаты (оставляем последние версии по дате)
-                const uniqueOrders = [];
-                const seenIds = new Map();
-                
-                orders.forEach(order => {
-                    const id = order.id;
-                    if (!seenIds.has(id) || seenIds.get(id) < order.date) {
-                        seenIds.set(id, order.date);
-                    }
-                });
-                
-                orders.forEach(order => {
-                    if (seenIds.get(order.id) === order.date) {
-                        uniqueOrders.push(order);
-                    }
-                });
-
-                document.getElementById('totalOrders').textContent = uniqueOrders.length;
-                document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
-
-                if (uniqueOrders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
-                    return;
-                }
-
-                uniqueOrders.reverse();
-
-                tbody.innerHTML = uniqueOrders.map((order, index) => `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td style="white-space:nowrap;">${order.date || '—'}</td>
-                        <td><strong>${escapeHtml(order.name || '')}</strong></td>
-                        <td>${escapeHtml(order.email || '')}</td>
-                        <td>${escapeHtml(order.phone || '—')}</td>
-                        <td>${escapeHtml(order.service || '')}</td>
-                        <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
-                        <td>
-                            <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
-                                  style="cursor:pointer;" 
-                                  onclick="toggleStatus('${order.id}', '${order.status}')">
-                                ${order.status === 'Новый' ? ' Новый' : '✅ Готов'}
-                            </span>
-                        </td>
-                        <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error(error);
-                tbody.innerHTML = '<tr><td colspan="9" class="no-orders" style="color:red;">Ошибка загрузки.</td></tr>';
-            }
+    try {
+        console.log('📡 Загрузка заказов из:', API_URL);
+        
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`API вернул ошибку: ${response.status}`);
         }
+        
+        let orders = await response.json();
+        console.log('✅ Получено заказов:', orders.length);
 
-        async function toggleStatus(id, currentStatus) {
-            const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
+        // Убираем дубликаты (оставляем последние версии по дате)
+        const uniqueOrdersMap = new Map();
+        
+        orders.forEach(order => {
+            const id = String(order.id);
+            const existingDate = uniqueOrdersMap.get(id);
             
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Ошибка получения данных');
-                
-                let orders = await response.json();
-                const order = orders.find(o => String(o.id) === String(id));
-                
-                if (!order) {
-                    alert('Заказ не найден');
-                    return;
-                }
-                
-                order.status = newStatus;
-                
-                const addResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ data: order })
-                });
-                
-                if (addResponse.ok) {
-                    loadOrders();
-                } else {
-                    throw new Error('Не удалось сохранить');
-                }
-                
-            } catch (error) {
-                alert('Ошибка: ' + error.message);
+            if (!existingDate || order.date > existingDate) {
+                uniqueOrdersMap.set(id, order);
             }
+        });
+        
+        const uniqueOrders = Array.from(uniqueOrdersMap.values());
+        console.log('✅ Уникальных заказов:', uniqueOrders.length);
+
+        document.getElementById('totalOrders').textContent = uniqueOrders.length;
+        document.getElementById('newOrders').textContent = uniqueOrders.filter(o => o.status === 'Новый').length;
+
+        if (uniqueOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="no-orders">Заказов пока нет</td></tr>';
+            return;
         }
 
+        uniqueOrders.reverse();
+
+        tbody.innerHTML = uniqueOrders.map((order, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td style="white-space:nowrap;">${order.date || '—'}</td>
+                <td><strong>${escapeHtml(order.name || '')}</strong></td>
+                <td>${escapeHtml(order.email || '')}</td>
+                <td>${escapeHtml(order.phone || '—')}</td>
+                <td>${escapeHtml(order.service || '')}</td>
+                <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
+                <td>
+                    <span class="${order.status === 'Новый' ? 'status-new' : 'status-done'}" 
+                          style="cursor:pointer;" 
+                          onclick="toggleStatus('${order.id}', '${order.status}')">
+                        ${order.status === 'Новый' ? '🆕 Новый' : '✅ Готов'}
+                    </span>
+                </td>
+                <td><button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button></td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        console.error('❌ Ошибка загрузки:', error);
+        tbody.innerHTML = `<tr><td colspan="9" class="no-orders" style="color:red;">
+            Ошибка: ${error.message}<br>
+            Проверьте консоль (F12) для деталей
+        </td></tr>`;
+    }
+}
+
+async function toggleStatus(id, currentStatus) {
+    const newStatus = currentStatus === 'Новый' ? 'Готов' : 'Новый';
+    
+    console.log('🔄 Попытка обновления:', {id, currentStatus, newStatus});
+    console.log('📡 API URL:', API_URL);
+    
+    try {
+        // Проверяем доступность API
+        const testResponse = await fetch(API_URL);
+        if (!testResponse.ok) {
+            throw new Error(`API недоступен: ${testResponse.status}`);
+        }
+        
+        let orders = await testResponse.json();
+        console.log('📊 Получено заказов:', orders.length);
+        
+        // Ищем заказ
+        const order = orders.find(o => String(o.id) === String(id));
+        
+        if (!order) {
+            alert('Заказ не найден. ID: ' + id);
+            return;
+        }
+        
+        // Обновляем статус
+        order.status = newStatus;
+        
+        console.log('📤 Отправка обновленного заказа:', order);
+        
+        const addResponse = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ data: order })
+        });
+        
+        console.log('📥 Ответ сервера:', addResponse.status, addResponse.statusText);
+        
+        if (addResponse.ok) {
+            console.log('✅ Успешно обновлено!');
+            loadOrders();
+        } else {
+            const errorText = await addResponse.text();
+            console.error('❌ Ошибка:', errorText);
+            throw new Error(`Ошибка ${addResponse.status}: ${errorText}`);
+        }
+        
+    } catch (error) {
+        console.error('❌ Полная ошибка:', error);
+        
+        if (error.message.includes('Failed to fetch')) {
+            alert(' Не удалось подключиться к серверу.\n\nПроверьте:\n1. Подключение к интернету\n2. CORS настройки SheetDB\n3. Правильность API URL');
+        } else {
+            alert('Ошибка: ' + error.message);
+        }
+    }
+}
         async function deleteOrder(id) {
             if (!confirm('Удалить этот заказ?')) return;
             
