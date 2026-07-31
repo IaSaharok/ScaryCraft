@@ -316,7 +316,7 @@
                     <div class="price">от 500 ₽</div>
                 </div>
                 <div class="service-card">
-                    <h3>️ Установка модов</h3>
+                    <h3>⚙️ Установка модов</h3>
                     <p>Установка и настройка модов, плагинов, создание модпаков под ваши требования</p>
                     <div class="price">от 900 ₽</div>
                 </div>
@@ -376,7 +376,7 @@
                 <button type="submit" class="btn" id="submitBtn" style="width: 100%;">Отправить заказ</button>
                 <div class="submit-status" id="submitStatus"></div>
                 <div class="form-note">
-                    <strong> Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
+                    <strong>📞 Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
                 </div>
             </form>
         </div>
@@ -385,7 +385,7 @@
     <footer id="contact">
         <div class="container">
             <h3>Контакты</h3>
-            <p> Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
+            <p>📧 Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
             <p>📱 Телефон: <a href="tel:+79953950115">+7 (995) 395-01-15</a></p>
             <p style="margin-top: 2rem;">© 2026 Minecraft Услуги. Все права защищены.</p>
         </div>
@@ -428,7 +428,7 @@
             <h2>📋 Панель администратора</h2>
             <div class="admin-tabs">
                 <button class="admin-tab active" id="tabOrders" onclick="showAdminSection('orders')">📦 Заказы</button>
-                <button class="admin-tab" id="tabChats" onclick="showAdminSection('chats')"> Чаты поддержки</button>
+                <button class="admin-tab" id="tabChats" onclick="showAdminSection('chats')">💬 Чаты поддержки</button>
                 <button class="admin-close" onclick="closeAdminPanel()">✕ Закрыть</button>
             </div>
         </div>
@@ -450,13 +450,13 @@
             </div>
 
             <div id="adminChatsSection" class="admin-section">
-                <h3 style="margin-bottom: 1rem; color: #2c3e50;">Активные чаты с пользователями</h3>
+                <h3 style="margin-bottom: 1rem; color: #2c3e50;">Чаты с пользователями</h3>
                 <div class="admin-table-wrapper">
                     <table class="admin-table">
                         <thead>
-                            <tr><th>Пользователь</th><th>Email</th><th>Последнее сообщение</th><th>Время</th><th>Статус</th><th>Действие</th></tr>
+                            <tr><th>ID чата</th><th>Пользователь</th><th>Email</th><th>Последнее сообщение</th><th>Время</th><th>Статус</th><th>Действие</th></tr>
                         </thead>
-                        <tbody id="chatsTableBody"><tr><td colspan="6" class="no-orders">Загрузка чатов...</td></tr></tbody>
+                        <tbody id="chatsTableBody"><tr><td colspan="7" class="no-orders">Загрузка чатов...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -494,7 +494,6 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-        import { getDatabase, ref, push, onValue, set, remove, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyA3fZC3oOSE7IkxqCaAK_0ap_-PuTXzj38",
@@ -508,14 +507,13 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getDatabase(app);
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
         let pendingAction = null;
+        let currentChatId = null;
 
         window.firebaseAuth = auth;
-        window.firebaseDb = db;
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
@@ -528,7 +526,7 @@
                 else if (action.type === 'chat') openUserChat();
             }
             if (user && document.getElementById('chatWindow').classList.contains('active')) {
-                loadUserChat();
+                loadUserChats();
             }
         });
 
@@ -568,7 +566,9 @@
             }
         }
 
-        const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
+        // ✅ ОБНОВЛЕННЫЕ API URL
+        const ORDERS_API = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
+        const CHATS_API = 'https://sheetdb.io/api/v1/4crld67kxonfj';
         const ADMIN_PASSWORD = 't0gether';
         const ADMIN_EMAIL = 'a1945rud@gmail.com';
 
@@ -625,7 +625,7 @@
 
             try {
                 showStatus('⏳ Сохранение в таблицу...', 'loading');
-                const sheetResponse = await fetch(API_URL, {
+                const sheetResponse = await fetch(ORDERS_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ data: orderData })
@@ -659,7 +659,10 @@
             }
         }
 
-        let chatUnsubscribe = null;
+        // ==========================================
+        // ЧАТЫ ЧЕРЕЗ SHEETDB
+        // ==========================================
+        let userChatInterval = null;
 
         window.openUserChat = function() {
             if (!currentUser) {
@@ -668,38 +671,75 @@
                 return;
             }
             document.getElementById('chatWindow').classList.add('active');
-            loadUserChat();
+            loadUserChats();
         };
 
         window.closeUserChat = function() {
             document.getElementById('chatWindow').classList.remove('active');
-            if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
+            if (userChatInterval) {
+                clearInterval(userChatInterval);
+                userChatInterval = null;
+            }
         };
 
-        function loadUserChat() {
+        async function loadUserChats() {
             if (!currentUser) return;
-            const chatRef = ref(db, `chats/${currentUser.uid}/messages`);
-            if (chatUnsubscribe) chatUnsubscribe();
             
-            chatUnsubscribe = onValue(chatRef, (snapshot) => {
-                const messagesDiv = document.getElementById('chatMessages');
-                const data = snapshot.val();
-                if (!data) {
-                    messagesDiv.innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Начните разговор с поддержкой 👋</p>';
-                    return;
+            try {
+                const response = await fetch(`${CHATS_API}?search[email]=${encodeURIComponent(currentUser.email)}`);
+                if (!response.ok) throw new Error('Ошибка загрузки чатов');
+                
+                const chats = await response.json();
+                const activeChat = chats.filter(c => c.status !== 'closed' && c.deleted !== 'true').pop() || chats.filter(c => c.deleted !== 'true').pop();
+                
+                if (activeChat) {
+                    currentChatId = activeChat.id;
+                    displayUserMessages(chats.filter(c => c.deleted !== 'true'));
+                } else {
+                    document.getElementById('chatMessages').innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Начните разговор с поддержкой 👋</p>';
                 }
-                const messages = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
-                messagesDiv.innerHTML = messages.map(msg => `
-                    <div class="chat-message ${msg.from === 'user' ? 'user' : 'admin'}">
-                        ${escapeHtml(msg.text)}
-                        <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
-                    </div>
-                `).join('');
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }, (error) => {
-                console.error('Ошибка загрузки чата:', error);
-                document.getElementById('chatMessages').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки чата</p>';
+                
+                if (userChatInterval) clearInterval(userChatInterval);
+                userChatInterval = setInterval(async () => {
+                    const resp = await fetch(`${CHATS_API}?search[email]=${encodeURIComponent(currentUser.email)}`);
+                    const allChats = (await resp.json()).filter(c => c.deleted !== 'true');
+                    displayUserMessages(allChats);
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Ошибка загрузки чатов:', error);
+                document.getElementById('chatMessages').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки</p>';
+            }
+        }
+
+        function displayUserMessages(allChats) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const sortedChats = allChats.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let allMessages = [];
+            sortedChats.forEach(chat => {
+                if (chat.message && chat.message.trim()) {
+                    allMessages.push({
+                        from: chat.sender || 'user',
+                        text: chat.message,
+                        time: chat.date,
+                        chatId: chat.id
+                    });
+                }
             });
+            
+            if (allMessages.length === 0) {
+                messagesDiv.innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Начните разговор с поддержкой 👋</p>';
+                return;
+            }
+            
+            messagesDiv.innerHTML = allMessages.map(msg => `
+                <div class="chat-message ${msg.from === 'admin' ? 'admin' : 'user'}">
+                    ${escapeHtml(msg.text)}
+                    <div class="time">${new Date(msg.time).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+            `).join('');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         window.sendUserMessage = async function() {
@@ -708,47 +748,28 @@
             if (!text || !currentUser) return;
             
             try {
-                // Проверяем, закрыт ли текущий чат
-                const chatInfoRef = ref(db, `chats/${currentUser.uid}/info`);
-                const snapshot = await get(chatInfoRef);
-                const chatInfo = snapshot.val();
+                const chatData = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    email: currentUser.email,
+                    name: currentUser.displayName,
+                    message: text,
+                    sender: 'user',
+                    status: 'open'
+                };
                 
-                let chatId = currentUser.uid;
-                
-                // Если чат закрыт, создаем новый с timestamp
-                if (chatInfo && chatInfo.status === 'closed') {
-                    chatId = `${currentUser.uid}_${Date.now()}`;
-                    // Копируем информацию о пользователе в новый чат
-                    await set(ref(db, `chats/${chatId}/info`), {
-                        name: currentUser.displayName,
-                        email: currentUser.email,
-                        photoURL: currentUser.photoURL,
-                        lastActive: Date.now(),
-                        status: 'open'
-                    });
-                } else if (!chatInfo) {
-                    // Создаем информацию о чате если её нет
-                    await set(ref(db, `chats/${currentUser.uid}/info`), {
-                        name: currentUser.displayName,
-                        email: currentUser.email,
-                        photoURL: currentUser.photoURL,
-                        lastActive: Date.now(),
-                        status: 'open'
-                    });
-                }
-                
-                // Отправляем сообщение
-                await push(ref(db, `chats/${chatId}/messages`), {
-                    from: 'user', text: text, timestamp: Date.now(),
-                    userName: currentUser.displayName, userEmail: currentUser.email
+                const response = await fetch(CHATS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ data: chatData })
                 });
                 
-                // Обновляем lastActive
-                await set(ref(db, `chats/${chatId}/info/lastActive`), Date.now());
+                if (!response.ok) throw new Error('Ошибка отправки');
                 
                 input.value = '';
+                loadUserChats();
             } catch (error) {
-                console.error('Ошибка отправки сообщения:', error);
+                console.error('Ошибка отправки:', error);
                 alert('Ошибка отправки сообщения: ' + error.message);
             }
         };
@@ -757,6 +778,9 @@
             if (e.key === 'Enter') window.sendUserMessage();
         });
 
+        // ==========================================
+        // АДМИН-ПАНЕЛЬ
+        // ==========================================
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('admin')) setTimeout(() => openAdminLogin(), 500);
@@ -791,7 +815,6 @@
             document.getElementById('adminPanel').classList.add('active');
             showAdminSection('orders');
             loadOrders();
-            loadSupportChats();
         };
 
         window.closeAdminPanel = function() {
@@ -803,13 +826,20 @@
             document.getElementById('adminChatsSection').classList.toggle('active', section === 'chats');
             document.getElementById('tabOrders').classList.toggle('active', section === 'orders');
             document.getElementById('tabChats').classList.toggle('active', section === 'chats');
+            
+            if (section === 'chats') {
+                loadSupportChats();
+            }
         };
 
+        // ==========================================
+        // ЗАКАЗЫ
+        // ==========================================
         async function loadOrders() {
             const tbody = document.getElementById('ordersTableBody');
             tbody.innerHTML = '<tr><td colspan="8" class="no-orders">Загрузка данных...</td></tr>';
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(ORDERS_API);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
                 let orders = await response.json();
 
@@ -847,7 +877,7 @@
                             <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
                             <td><span class="${statusClass}" style="cursor:pointer;" onclick="toggleStatus('${order.id}', '${order.status}')">${statusText}</span></td>
                             <td>
-                                <button class="btn-chat" onclick="openAdminChat('${order.userId || order.email}', '${escapeHtml(order.name || '')}')">💬 Чат</button>
+                                <button class="btn-chat" onclick="openAdminChat('${order.id}', '${escapeHtml(order.name || '')}')">💬 Чат</button>
                                 <button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button>
                             </td>
                         </tr>
@@ -858,166 +888,174 @@
             }
         }
 
-        async function toggleStatus(id, currentStatus) {
+        window.toggleStatus = async function(id, currentStatus) {
             let newStatus = currentStatus === 'Новый' ? 'В процессе' : (currentStatus === 'В процессе' ? 'Готов' : 'Новый');
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(ORDERS_API);
                 const orders = await response.json();
                 const order = orders.find(o => String(o.id) === String(id));
-                if (!order) return;
+                if (!order) throw new Error('Заказ не найден');
+                
                 order.status = newStatus;
                 order.date = new Date().toLocaleString('ru-RU');
-                await fetch(API_URL, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                
+                const updateResponse = await fetch(ORDERS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ data: order })
                 });
+                
+                if (!updateResponse.ok) throw new Error('Ошибка обновления');
                 loadOrders();
-            } catch (error) { alert('Ошибка обновления: ' + error.message); }
-        }
+            } catch (error) {
+                alert('Ошибка обновления: ' + error.message);
+            }
+        };
 
-        async function deleteOrder(id) {
+        window.deleteOrder = async function(id) {
             if (!confirm('Удалить этот заказ?')) return;
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(ORDERS_API);
                 const orders = await response.json();
                 const order = orders.find(o => String(o.id) === String(id));
-                if (!order) return;
-                order.deleted = 'true'; order.status = 'Удален'; order.date = new Date().toLocaleString('ru-RU');
-                await fetch(API_URL, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                if (!order) throw new Error('Заказ не найден');
+                
+                order.deleted = 'true';
+                order.status = 'Удален';
+                order.date = new Date().toLocaleString('ru-RU');
+                
+                const deleteResponse = await fetch(ORDERS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ data: order })
                 });
+                
+                if (!deleteResponse.ok) throw new Error('Ошибка удаления');
                 loadOrders();
-            } catch (error) { alert('Ошибка удаления: ' + error.message); }
-        }
+            } catch (error) {
+                alert('Ошибка удаления: ' + error.message);
+            }
+        };
 
-        let adminChatUnsubscribe = null;
-        let currentChatUserId = null;
-        let currentChatId = null;
+        // ==========================================
+        // АДМИН ЧАТЫ
+        // ==========================================
+        let adminChatInterval = null;
 
-        function loadSupportChats() {
-            const chatsRef = ref(db, 'chats');
-            onValue(chatsRef, (snapshot) => {
-                try {
-                    const data = snapshot.val();
-                    const tbody = document.getElementById('chatsTableBody');
-                    
-                    if (!data) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="no-orders">Чатов пока нет</td></tr>';
-                        return;
+        async function loadSupportChats() {
+            const tbody = document.getElementById('chatsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="no-orders">Загрузка чатов...</td></tr>';
+            
+            try {
+                const response = await fetch(CHATS_API);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                let chats = await response.json();
+
+                // Фильтруем удаленные
+                chats = chats.filter(c => c.deleted !== 'true');
+
+                // Группируем по email
+                const groupedChats = {};
+                chats.forEach(chat => {
+                    const email = chat.email;
+                    if (!groupedChats[email]) {
+                        groupedChats[email] = [];
                     }
+                    groupedChats[email].push(chat);
+                });
 
-                    let chatList = [];
-                    for (const chatId in data) {
-                        const chatData = data[chatId];
-                        const info = chatData.info || { name: 'Неизвестно', email: 'Нет email', status: 'open' };
-                        
-                        let lastMsg = { text: 'Нет сообщений', time: 0, from: 'unknown' };
-                        if (chatData.messages) {
-                            const msgs = Object.values(chatData.messages);
-                            if (msgs.length > 0) {
-                                msgs.sort((a, b) => b.timestamp - a.timestamp);
-                                lastMsg = msgs[0];
-                            }
-                        }
-                        chatList.push({ chatId, info, lastMsg });
-                    }
+                const chatList = Object.entries(groupedChats).map(([email, messages]) => {
+                    const lastMsg = messages[messages.length - 1];
+                    return {
+                        chatId: lastMsg.id,
+                        email: email,
+                        name: lastMsg.name || 'Неизвестно',
+                        lastMessage: lastMsg.message,
+                        time: lastMsg.date,
+                        status: lastMsg.status || 'open'
+                    };
+                });
 
-                    chatList.sort((a, b) => b.lastMsg.time - a.lastMsg.time);
+                chatList.sort((a, b) => new Date(b.time) - new Date(a.time));
 
-                    tbody.innerHTML = chatList.map(chat => {
-                        const timeStr = new Date(chat.lastMsg.time).toLocaleString('ru-RU');
-                        const isUnread = chat.lastMsg.from === 'user' && chat.info.status !== 'closed';
-                        const rowStyle = isUnread ? 'background: #f0f8ff; font-weight: bold;' : '';
-                        const statusClass = chat.info.status === 'closed' ? 'status-closed' : 'status-new';
-                        const statusText = chat.info.status === 'closed' ? 'Закрыт' : 'Открыт';
-                        
-                        return `
-                            <tr style="${rowStyle}">
-                                <td><strong>${escapeHtml(chat.info.name)}</strong></td>
-                                <td>${escapeHtml(chat.info.email)}</td>
-                                <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    ${chat.lastMsg.from === 'user' ? '👤 ' : '🛡️ '}${escapeHtml(chat.lastMsg.text)}
-                                </td>
-                                <td style="white-space: nowrap;">${timeStr}</td>
-                                <td><span class="${statusClass}">${statusText}</span></td>
-                                <td>
-                                    <button class="btn-chat" onclick="openAdminChat('${chat.chatId}', '${escapeHtml(chat.info.name)}')">Открыть чат</button>
-                                    ${chat.info.status !== 'closed' ? `<button class="btn-close-chat" onclick="closeChat('${chat.chatId}')">Закрыть</button>` : ''}
-                                    <button class="btn-delete" onclick="deleteChat('${chat.chatId}')">Удалить</button>
-                                </td>
-                            </tr>
-                        `;
-                    }).join('');
-                } catch (error) {
-                    console.error('Ошибка загрузки чатов:', error);
-                    document.getElementById('chatsTableBody').innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">Ошибка загрузки чатов</td></tr>';
+                if (chatList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="no-orders">Чатов пока нет</td></tr>';
+                    return;
                 }
-            }, (error) => {
-                console.error('Firebase error:', error);
-                document.getElementById('chatsTableBody').innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">Ошибка подключения к Firebase</td></tr>';
-            });
+
+                tbody.innerHTML = chatList.map(chat => {
+                    const timeStr = new Date(chat.time).toLocaleString('ru-RU');
+                    const statusClass = chat.status === 'closed' ? 'status-closed' : 'status-new';
+                    const statusText = chat.status === 'closed' ? 'Закрыт' : 'Открыт';
+                    
+                    return `
+                        <tr>
+                            <td>${chat.chatId}</td>
+                            <td><strong>${escapeHtml(chat.name)}</strong></td>
+                            <td>${escapeHtml(chat.email)}</td>
+                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${escapeHtml(chat.lastMessage)}
+                            </td>
+                            <td style="white-space: nowrap;">${timeStr}</td>
+                            <td><span class="${statusClass}">${statusText}</span></td>
+                            <td>
+                                <button class="btn-chat" onclick="openAdminChat('${chat.chatId}', '${escapeHtml(chat.name)}')">Открыть чат</button>
+                                ${chat.status !== 'closed' ? `<button class="btn-close-chat" onclick="closeChat('${chat.chatId}')">Закрыть</button>` : ''}
+                                <button class="btn-delete" onclick="deleteChat('${chat.chatId}')">Удалить</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-orders" style="color:red;">Ошибка: ' + error.message + '</td></tr>';
+            }
         }
-
-        window.closeChat = async function(chatId) {
-            try {
-                await set(ref(db, `chats/${chatId}/info/status`), 'closed');
-                alert('Чат закрыт');
-            } catch (error) {
-                console.error('Ошибка закрытия чата:', error);
-                alert('Ошибка закрытия чата');
-            }
-        };
-
-        window.deleteChat = async function(chatId) {
-            if (!confirm('Удалить этот чат полностью?')) return;
-            try {
-                await remove(ref(db, `chats/${chatId}`));
-                alert('Чат удалён');
-            } catch (error) {
-                console.error('Ошибка удаления чата:', error);
-                alert('Ошибка удаления чата');
-            }
-        };
 
         window.openAdminChat = function(chatId, userName) {
             currentChatId = chatId;
-            currentChatUserId = userName;
             document.getElementById('adminChatTitle').textContent = `💬 Чат с ${userName}`;
             document.getElementById('adminChatWindow').classList.add('active');
-            loadAdminChat(chatId);
+            loadAdminChatMessages();
+            
+            if (adminChatInterval) clearInterval(adminChatInterval);
+            adminChatInterval = setInterval(loadAdminChatMessages, 3000);
         };
 
         window.closeAdminChat = function() {
             document.getElementById('adminChatWindow').classList.remove('active');
-            if (adminChatUnsubscribe) { adminChatUnsubscribe(); adminChatUnsubscribe = null; }
-            currentChatUserId = null;
+            if (adminChatInterval) {
+                clearInterval(adminChatInterval);
+                adminChatInterval = null;
+            }
             currentChatId = null;
         };
 
-        function loadAdminChat(chatId) {
-            const chatRef = ref(db, `chats/${chatId}/messages`);
-            if (adminChatUnsubscribe) adminChatUnsubscribe();
+        async function loadAdminChatMessages() {
+            if (!currentChatId) return;
             
-            adminChatUnsubscribe = onValue(chatRef, (snapshot) => {
+            try {
+                const response = await fetch(`${CHATS_API}?search[id]=${currentChatId}`);
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                
+                const messages = await response.json();
                 const messagesDiv = document.getElementById('adminChatMessages');
-                const data = snapshot.val();
-                if (!data) {
+                
+                if (messages.length === 0) {
                     messagesDiv.innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Сообщений пока нет</p>';
                     return;
                 }
-                const messages = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
+                
                 messagesDiv.innerHTML = messages.map(msg => `
-                    <div class="chat-message ${msg.from === 'admin' ? 'admin' : 'user'}" style="${msg.from === 'admin' ? 'align-self: flex-end; background: #9b59ff; color: white;' : ''}">
-                        ${escapeHtml(msg.text)}
-                        <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
+                    <div class="chat-message ${msg.sender === 'admin' ? 'admin' : 'user'}" style="${msg.sender === 'admin' ? 'align-self: flex-end; background: #9b59ff; color: white;' : ''}">
+                        ${escapeHtml(msg.message)}
+                        <div class="time">${new Date(msg.date).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
                     </div>
                 `).join('');
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }, (error) => {
-                console.error('Ошибка загрузки админ чата:', error);
-                document.getElementById('adminChatMessages').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки</p>';
-            });
+                
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+            }
         }
 
         window.sendAdminMessage = async function() {
@@ -1029,21 +1067,77 @@
             }
             
             try {
-                await push(ref(db, `chats/${currentChatId}/messages`), {
-                    from: 'admin', text: text, timestamp: Date.now()
+                const chatData = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    email: ADMIN_EMAIL,
+                    name: 'Администратор',
+                    message: text,
+                    sender: 'admin',
+                    status: 'open'
+                };
+                
+                const response = await fetch(CHATS_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ data: chatData })
                 });
-                // Обновляем lastActive
-                await set(ref(db, `chats/${currentChatId}/info/lastActive`), Date.now());
+                
+                if (!response.ok) throw new Error('Ошибка отправки');
+                
                 input.value = '';
+                loadAdminChatMessages();
             } catch (error) {
-                console.error('Ошибка отправки:', error);
-                alert('Ошибка отправки сообщения: ' + error.message);
+                alert('Ошибка отправки: ' + error.message);
             }
         };
 
         document.getElementById('adminChatInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') window.sendAdminMessage();
         });
+
+        window.closeChat = async function(chatId) {
+            try {
+                const response = await fetch(`${CHATS_API}?search[id]=${chatId}`);
+                const chats = await response.json();
+                const chat = chats.find(c => c.id === chatId);
+                
+                if (chat) {
+                    chat.status = 'closed';
+                    await fetch(CHATS_API, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ data: chat })
+                    });
+                    alert('Чат закрыт');
+                    loadSupportChats();
+                }
+            } catch (error) {
+                alert('Ошибка закрытия: ' + error.message);
+            }
+        };
+
+        window.deleteChat = async function(chatId) {
+            if (!confirm('Удалить этот чат полностью?')) return;
+            try {
+                const response = await fetch(`${CHATS_API}?search[id]=${chatId}`);
+                const chats = await response.json();
+                const chat = chats.find(c => c.id === chatId);
+                
+                if (chat) {
+                    chat.deleted = 'true';
+                    await fetch(CHATS_API, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ data: chat })
+                    });
+                    alert('Чат удалён');
+                    loadSupportChats();
+                }
+            } catch (error) {
+                alert('Ошибка удаления: ' + error.message);
+            }
+        };
 
         function escapeHtml(text) {
             const div = document.createElement('div');
@@ -1122,4 +1216,4 @@
         });
     </script>
 </body>
-            </html>
+    </html>
