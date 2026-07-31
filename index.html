@@ -25,10 +25,11 @@
         .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
         .btn-google {
             background: white; color: #333; border: 2px solid #ddd;
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 12px 24px; font-size: 1rem; width: 100%;
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 12px 24px; font-size: 1rem;
         }
         .btn-google:hover { background: #f5f5f5; border-color: #999; }
+        .btn-google img { width: 20px; height: 20px; }
 
         nav {
             position: fixed; top: 0; left: 0; width: 100%;
@@ -39,7 +40,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
         nav.hidden { transform: translateY(-100%); }
-        nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; align-items: center; flex-wrap: wrap; }
+        nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; align-items: center; }
         nav a { color: white; text-decoration: none; font-weight: bold; transition: all 0.3s ease; text-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
         nav a:hover { color: #fff4b8; text-shadow: 0 0 12px rgba(255, 244, 184, 0.8); }
 
@@ -137,6 +138,7 @@
         footer a { color: #c084fc; text-decoration: none; transition: color 0.3s ease; }
         footer a:hover { color: #e0b3ff; text-decoration: underline; }
 
+        /* Модальные окна */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
@@ -191,7 +193,7 @@
         .admin-table-wrapper { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow-x: auto; }
         .admin-table { width: 100%; border-collapse: collapse; }
         .admin-table th { background: #f5f0ff; color: #2c3e50; padding: 1rem; text-align: left; font-size: 0.9rem; border-bottom: 2px solid #e0d4f5; white-space: nowrap; }
-        .admin-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; vertical-align: middle; }
+        .admin-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; }
         .admin-table tr:hover td { background: #faf8ff; }
         .status-new { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
         .status-progress { background: #cce5ff; color: #004085; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
@@ -202,6 +204,7 @@
         .btn-chat { background: #9b59ff; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; margin-right: 5px; }
         .btn-chat:hover { background: #8040e0; }
 
+        /* ЧАТ-ВИДЖЕТ */
         .chat-widget {
             position: fixed; bottom: 20px; right: 20px; z-index: 9998;
         }
@@ -218,8 +221,8 @@
             position: absolute; top: -5px; right: -5px;
             background: #ff4757; color: white; border-radius: 50%;
             width: 24px; height: 24px; font-size: 0.8rem;
-            display: none; align-items: center; justify-content: center;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; display: none;
         }
         .chat-badge.visible { display: flex; }
 
@@ -249,7 +252,7 @@
         }
         .chat-message {
             max-width: 80%; padding: 10px 14px; border-radius: 15px;
-            font-size: 0.9rem; line-height: 1.4; word-wrap: break-word;
+            font-size: 0.9rem; line-height: 1.4;
         }
         .chat-message.user {
             align-self: flex-end;
@@ -281,6 +284,7 @@
         }
         .chat-input-area button:disabled { background: #ccc; }
 
+        /* Админ чат */
         .admin-chat-window {
             position: fixed; top: 0; right: 0; width: 400px; max-width: 100vw;
             height: 100%; background: white;
@@ -362,7 +366,7 @@
                     <div class="price">от 1 500 ₽</div>
                 </div>
                 <div class="service-card">
-                    <h3>🏗️ Строительство</h3>
+                    <h3>️ Строительство</h3>
                     <p>Создание уникальных построек, городов, замков и целых миров по вашему дизайну</p>
                     <div class="price">от 500 ₽</div>
                 </div>
@@ -454,13 +458,13 @@
         </div>
     </div>
 
-    <!-- Модальное окно входа -->
+    <!-- Модальное окно входа (для заказа/чата) -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-content">
-            <div class="modal-icon">🔐</div>
+            <div class="modal-icon"></div>
             <h3>Войдите через Google</h3>
             <p>Чтобы отправить заказ или написать в поддержку, нужно войти в аккаунт.</p>
-            <button class="btn btn-google" onclick="signInWithGoogle()">
+            <button class="btn btn-google" onclick="signInWithGoogle()" style="width: 100%; margin-bottom: 10px;">
                 <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2c-.4.4 6.6-4.8 6.6-14.8 0-1.3-.1-2.3-.4-3.5z"/></svg>
                 Войти через Google
             </button>
@@ -485,7 +489,7 @@
     <!-- Админ-панель -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
-            <h2>📋 Панель заказов</h2>
+            <h2> Панель заказов</h2>
             <div>
                 <button class="admin-close" onclick="loadOrders()">🔄 Обновить</button>
                 <button class="admin-close" onclick="closeAdminPanel()">✕ Закрыть</button>
@@ -512,7 +516,7 @@
                         <tr>
                             <th>№</th>
                             <th>Дата</th>
-                            <th>Имя / Email</th>
+                            <th>Имя</th>
                             <th>Телефон</th>
                             <th>Услуга</th>
                             <th>Описание</th>
@@ -543,7 +547,9 @@
 
     <!-- ЧАТ-ВИДЖЕТ -->
     <div class="chat-widget" id="chatWidget">
-        <button class="chat-button" onclick="openUserChat()" title="Чат с поддержкой">💬</button>
+        <button class="chat-button" onclick="openUserChat()" title="Чат с поддержкой">
+            💬
+        </button>
         <div class="chat-badge" id="chatBadge">0</div>
     </div>
 
@@ -555,7 +561,7 @@
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Напишите сообщение...">
-            <button onclick="sendUserMessage()">➤</button>
+            <button onclick="sendUserMessage()">📤</button>
         </div>
     </div>
 
@@ -563,9 +569,9 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-        import { getDatabase, ref, push, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+        import { getDatabase, ref, push, onValue, set, serverTimestamp, query, orderByChild, limitToLast } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-        // ✅ ВАШ FIREBASE КОНФИГ (ОБНОВЛЁН)
+        // ✅ ВАШ FIREBASE КОНФИГ
         const firebaseConfig = {
             apiKey: "AIzaSyA3fZC3oOSE7IkxqCaAK_0ap_-PuTXzj38",
             authDomain: "minecraft-services-1be6d.firebaseapp.com",
@@ -637,9 +643,6 @@
             }
         }
 
-        // ==========================================
-        // ОТПРАВКА ЗАКАЗА
-        // ==========================================
         const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
         const ADMIN_PASSWORD = 't0gether';
         const ADMIN_EMAIL = 'a1945rud@gmail.com';
@@ -701,13 +704,17 @@
             };
 
             console.log('📤 Отправка заказа:', orderData);
+
             let sheetSuccess = false;
 
             try {
                 showStatus('⏳ Сохранение в таблицу...', 'loading');
                 const sheetResponse = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({ data: orderData })
                 });
 
@@ -726,7 +733,7 @@
             }
 
             try {
-                showStatus('📧 Отправка на почту...', 'loading');
+                showStatus(' Отправка на почту...', 'loading');
                 const emailFormData = new FormData();
                 emailFormData.append('name', orderData.name);
                 emailFormData.append('email', orderData.email);
@@ -758,10 +765,8 @@
             submitBtn.textContent = 'Отправить заказ';
         }
 
-        // ==========================================
-        // ЧАТ ПОЛЬЗОВАТЕЛЯ
-        // ==========================================
         let chatUnsubscribe = null;
+        let currentChatUserId = null;
 
         window.openUserChat = function() {
             if (!currentUser) {
@@ -783,7 +788,9 @@
 
         function loadUserChat() {
             if (!currentUser) return;
+            
             const chatRef = ref(db, `chats/${currentUser.uid}/messages`);
+            
             if (chatUnsubscribe) chatUnsubscribe();
             
             chatUnsubscribe = onValue(chatRef, (snapshot) => {
@@ -802,6 +809,7 @@
                         <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
                     </div>
                 `).join('');
+                
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
         }
@@ -826,6 +834,7 @@
                 photoURL: currentUser.photoURL,
                 lastActive: Date.now()
             });
+            
             input.value = '';
         };
 
@@ -833,9 +842,6 @@
             if (e.key === 'Enter') window.sendUserMessage();
         });
 
-        // ==========================================
-        // АДМИН-ПАНЕЛЬ
-        // ==========================================
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('admin')) {
@@ -885,6 +891,7 @@
             try {
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                
                 let orders = await response.json();
 
                 const uniqueMap = new Map();
@@ -932,7 +939,9 @@
                             <td>${escapeHtml(order.service || '')}</td>
                             <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
                             <td>
-                                <span class="${statusClass}" style="cursor:pointer;" onclick="toggleStatus('${order.id}', '${order.status}')">
+                                <span class="${statusClass}" 
+                                      style="cursor:pointer;" 
+                                      onclick="toggleStatus('${order.id}', '${order.status}')">
                                     ${statusText}
                                 </span>
                             </td>
@@ -945,7 +954,7 @@
                 }).join('');
 
             } catch (error) {
-                console.error('❌ Ошибка загрузки:', error);
+                console.error(' Ошибка загрузки:', error);
                 tbody.innerHTML = '<tr><td colspan="8" class="no-orders" style="color:red;">Ошибка: ' + error.message + '</td></tr>';
             }
         }
@@ -959,8 +968,10 @@
             try {
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                
                 const orders = await response.json();
                 const order = orders.find(o => String(o.id) === String(id));
+                
                 if (!order) { alert('Заказ не найден'); return; }
                 
                 order.status = newStatus;
@@ -971,8 +982,10 @@
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ data: order })
                 });
+                
                 if (addResponse.ok) loadOrders();
                 else throw new Error(`Ошибка ${addResponse.status}`);
+                
             } catch (error) {
                 alert('Ошибка обновления: ' + error.message);
             }
@@ -980,11 +993,14 @@
 
         async function deleteOrder(id) {
             if (!confirm('Удалить этот заказ?')) return;
+            
             try {
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                
                 const orders = await response.json();
                 const order = orders.find(o => String(o.id) === String(id));
+                
                 if (!order) { alert('Заказ не найден'); return; }
                 
                 order.deleted = 'true';
@@ -996,20 +1012,19 @@
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ data: order })
                 });
+                
                 if (deleteResponse.ok) loadOrders();
                 else throw new Error(`Ошибка ${deleteResponse.status}`);
+                
             } catch (error) {
                 alert('Ошибка удаления: ' + error.message);
             }
         }
 
-        // ==========================================
-        // АДМИН ЧАТ
-        // ==========================================
         let adminChatUnsubscribe = null;
 
         window.openAdminChat = function(userId, userName) {
-            window.currentChatUserId = userId;
+            currentChatUserId = userId;
             document.getElementById('adminChatTitle').textContent = `💬 Чат с ${userName}`;
             document.getElementById('adminChatWindow').classList.add('active');
             loadAdminChat(userId);
@@ -1021,11 +1036,12 @@
                 adminChatUnsubscribe();
                 adminChatUnsubscribe = null;
             }
-            window.currentChatUserId = null;
+            currentChatUserId = null;
         };
 
         function loadAdminChat(userId) {
             const chatRef = ref(db, `chats/${userId}/messages`);
+            
             if (adminChatUnsubscribe) adminChatUnsubscribe();
             
             adminChatUnsubscribe = onValue(chatRef, (snapshot) => {
@@ -1039,11 +1055,12 @@
                 
                 const messages = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
                 messagesDiv.innerHTML = messages.map(msg => `
-                    <div class="chat-message ${msg.from === 'admin' ? 'user' : 'admin'}" style="${msg.from === 'admin' ? 'align-self: flex-end; background: #9b59ff; color: white;' : ''}">
+                    <div class="chat-message ${msg.from === 'admin' ? 'admin' : 'user'}" style="${msg.from === 'admin' ? 'align-self: flex-end; background: #9b59ff; color: white;' : ''}">
                         ${escapeHtml(msg.text)}
                         <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
                     </div>
                 `).join('');
+                
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
         }
@@ -1051,14 +1068,15 @@
         window.sendAdminMessage = function() {
             const input = document.getElementById('adminChatInput');
             const text = input.value.trim();
-            if (!text || !window.currentChatUserId) return;
+            if (!text || !currentChatUserId) return;
             
-            const messagesRef = ref(db, `chats/${window.currentChatUserId}/messages`);
+            const messagesRef = ref(db, `chats/${currentChatUserId}/messages`);
             push(messagesRef, {
                 from: 'admin',
                 text: text,
                 timestamp: Date.now()
             });
+            
             input.value = '';
         };
 
@@ -1072,9 +1090,6 @@
             return div.innerHTML;
         }
 
-        // ==========================================
-        // НАВИГАЦИЯ И МОДАЛКИ
-        // ==========================================
         window.openModal = function(id) {
             const modal = document.getElementById(id);
             modal.style.display = 'flex';
