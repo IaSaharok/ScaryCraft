@@ -121,7 +121,6 @@
         footer a { color: #c084fc; text-decoration: none; transition: color 0.3s ease; }
         footer a:hover { color: #e0b3ff; text-decoration: underline; }
 
-        /* Модальные окна */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
@@ -139,7 +138,6 @@
         .modal-content p { color: #666; line-height: 1.5; margin-bottom: 1.5rem; }
         @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
-        /* Админ-панель */
         .admin-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;
@@ -183,7 +181,7 @@
         .stat-card .number { font-size: 2.5rem; font-weight: bold; color: #9b59ff; }
         .stat-card .label { color: #666; font-size: 0.95rem; }
         
-        .admin-table-wrapper { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow-x: auto; }
+        .admin-table-wrapper { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow-x: auto; margin-bottom: 2rem; }
         .admin-table { width: 100%; border-collapse: collapse; }
         .admin-table th { background: #f5f0ff; color: #2c3e50; padding: 1rem; text-align: left; font-size: 0.9rem; border-bottom: 2px solid #e0d4f5; white-space: nowrap; }
         .admin-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; }
@@ -192,14 +190,17 @@
         .status-new { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
         .status-progress { background: #cce5ff; color: #004085; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
         .status-done { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .status-closed { background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        
         .no-orders { text-align: center; padding: 3rem; color: #999; font-size: 1.1rem; }
         
         .btn-delete { background: #ff4757; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; }
         .btn-delete:hover { background: #ff6b81; }
         .btn-chat { background: #9b59ff; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; margin-right: 5px; }
         .btn-chat:hover { background: #8040e0; }
+        .btn-close-chat { background: #ffa502; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; margin-right: 5px; }
+        .btn-close-chat:hover { background: #ffbe00; }
 
-        /* ЧАТ-ВИДЖЕТ */
         .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9998; }
         .chat-button {
             width: 60px; height: 60px; border-radius: 50%;
@@ -241,7 +242,6 @@
         .chat-input-area input:focus { outline: none; border-color: #9b59ff; }
         .chat-input-area button { background: #9b59ff; color: white; border: none; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
 
-        /* Админ чат окно */
         .admin-chat-window {
             position: fixed; top: 0; right: 0; width: 400px; max-width: 100vw;
             height: 100%; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2);
@@ -316,7 +316,7 @@
                     <div class="price">от 500 ₽</div>
                 </div>
                 <div class="service-card">
-                    <h3>⚙️ Установка модов</h3>
+                    <h3>️ Установка модов</h3>
                     <p>Установка и настройка модов, плагинов, создание модпаков под ваши требования</p>
                     <div class="price">от 900 ₽</div>
                 </div>
@@ -376,7 +376,7 @@
                 <button type="submit" class="btn" id="submitBtn" style="width: 100%;">Отправить заказ</button>
                 <div class="submit-status" id="submitStatus"></div>
                 <div class="form-note">
-                    <strong>📞 Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
+                    <strong> Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
                 </div>
             </form>
         </div>
@@ -385,13 +385,12 @@
     <footer id="contact">
         <div class="container">
             <h3>Контакты</h3>
-            <p>📧 Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
+            <p> Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
             <p>📱 Телефон: <a href="tel:+79953950115">+7 (995) 395-01-15</a></p>
             <p style="margin-top: 2rem;">© 2026 Minecraft Услуги. Все права защищены.</p>
         </div>
     </footer>
 
-    <!-- Модальное окно успеха -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content">
             <div class="modal-icon">🎉</div>
@@ -401,7 +400,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно входа -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-content">
             <div class="modal-icon">🔐</div>
@@ -415,7 +413,6 @@
         </div>
     </div>
 
-    <!-- Вход в админку -->
     <div class="admin-overlay" id="adminOverlay">
         <div class="admin-login">
             <h3>🔐 Вход в админ-панель</h3>
@@ -426,18 +423,16 @@
         </div>
     </div>
 
-    <!-- Админ-панель -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
             <h2>📋 Панель администратора</h2>
             <div class="admin-tabs">
                 <button class="admin-tab active" id="tabOrders" onclick="showAdminSection('orders')">📦 Заказы</button>
-                <button class="admin-tab" id="tabChats" onclick="showAdminSection('chats')">💬 Чаты поддержки</button>
+                <button class="admin-tab" id="tabChats" onclick="showAdminSection('chats')"> Чаты поддержки</button>
                 <button class="admin-close" onclick="closeAdminPanel()">✕ Закрыть</button>
             </div>
         </div>
         <div class="admin-body">
-            <!-- Секция Заказов -->
             <div id="adminOrdersSection" class="admin-section active">
                 <div class="admin-stats">
                     <div class="stat-card"><div class="number" id="totalOrders">0</div><div class="label">Всего заказов</div></div>
@@ -447,41 +442,27 @@
                 <div class="admin-table-wrapper">
                     <table class="admin-table">
                         <thead>
-                            <tr>
-                                <th>№</th><th>Дата</th><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Описание</th><th>Статус</th><th>Действия</th>
-                            </tr>
+                            <tr><th>№</th><th>Дата</th><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Описание</th><th>Статус</th><th>Действия</th></tr>
                         </thead>
-                        <tbody id="ordersTableBody">
-                            <tr><td colspan="8" class="no-orders">Загрузка заказов...</td></tr>
-                        </tbody>
+                        <tbody id="ordersTableBody"><tr><td colspan="8" class="no-orders">Загрузка заказов...</td></tr></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Секция Чатов -->
             <div id="adminChatsSection" class="admin-section">
                 <h3 style="margin-bottom: 1rem; color: #2c3e50;">Активные чаты с пользователями</h3>
                 <div class="admin-table-wrapper">
                     <table class="admin-table">
                         <thead>
-                            <tr>
-                                <th>Пользователь</th>
-                                <th>Email</th>
-                                <th>Последнее сообщение</th>
-                                <th>Время</th>
-                                <th>Действие</th>
-                            </tr>
+                            <tr><th>Пользователь</th><th>Email</th><th>Последнее сообщение</th><th>Время</th><th>Статус</th><th>Действие</th></tr>
                         </thead>
-                        <tbody id="chatsTableBody">
-                            <tr><td colspan="5" class="no-orders">Загрузка чатов...</td></tr>
-                        </tbody>
+                        <tbody id="chatsTableBody"><tr><td colspan="6" class="no-orders">Загрузка чатов...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Админ чат окно -->
     <div class="admin-chat-window" id="adminChatWindow">
         <div class="admin-chat-header">
             <h4 id="adminChatTitle">💬 Чат с пользователем</h4>
@@ -494,7 +475,6 @@
         </div>
     </div>
 
-    <!-- ЧАТ-ВИДЖЕТ -->
     <div class="chat-widget" id="chatWidget">
         <button class="chat-button" onclick="openUserChat()" title="Чат с поддержкой">💬</button>
     </div>
@@ -511,11 +491,10 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-        import { getDatabase, ref, push, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+        import { getDatabase, ref, push, onValue, set, remove, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyA3fZC3oOSE7IkxqCaAK_0ap_-PuTXzj38",
@@ -556,12 +535,12 @@
         window.signInWithGoogle = async function() {
             try {
                 console.log('Начинаем вход через Google...');
-                const result = await signInWithPopup(auth, googleProvider);
-                console.log('✅ Успешный вход:', result.user);
+                await signInWithPopup(auth, googleProvider);
+                console.log('✅ Успешный вход');
             } catch (error) {
                 console.error('❌ Ошибка входа:', error);
                 if (error.code === 'auth/unauthorized-domain') {
-                    alert('❌ Домен не авторизован!\n\nДобавьте "' + window.location.hostname + '" в Firebase Console:\nAuthentication → Settings → Authorized domains');
+                    alert('❌ Домен не авторизован!\n\nДобавьте "' + window.location.hostname + '" в Firebase Console');
                 } else {
                     alert('Ошибка входа: ' + error.message);
                 }
@@ -680,9 +659,6 @@
             }
         }
 
-        // ==========================================
-        // ЧАТ ПОЛЬЗОВАТЕЛЯ
-        // ==========================================
         let chatUnsubscribe = null;
 
         window.openUserChat = function() {
@@ -720,32 +696,67 @@
                     </div>
                 `).join('');
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, (error) => {
+                console.error('Ошибка загрузки чата:', error);
+                document.getElementById('chatMessages').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки чата</p>';
             });
         }
 
-        window.sendUserMessage = function() {
+        window.sendUserMessage = async function() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text || !currentUser) return;
             
-            push(ref(db, `chats/${currentUser.uid}/messages`), {
-                from: 'user', text: text, timestamp: Date.now(),
-                userName: currentUser.displayName, userEmail: currentUser.email
-            });
-            set(ref(db, `chats/${currentUser.uid}/info`), {
-                name: currentUser.displayName, email: currentUser.email,
-                photoURL: currentUser.photoURL, lastActive: Date.now()
-            });
-            input.value = '';
+            try {
+                // Проверяем, закрыт ли текущий чат
+                const chatInfoRef = ref(db, `chats/${currentUser.uid}/info`);
+                const snapshot = await get(chatInfoRef);
+                const chatInfo = snapshot.val();
+                
+                let chatId = currentUser.uid;
+                
+                // Если чат закрыт, создаем новый с timestamp
+                if (chatInfo && chatInfo.status === 'closed') {
+                    chatId = `${currentUser.uid}_${Date.now()}`;
+                    // Копируем информацию о пользователе в новый чат
+                    await set(ref(db, `chats/${chatId}/info`), {
+                        name: currentUser.displayName,
+                        email: currentUser.email,
+                        photoURL: currentUser.photoURL,
+                        lastActive: Date.now(),
+                        status: 'open'
+                    });
+                } else if (!chatInfo) {
+                    // Создаем информацию о чате если её нет
+                    await set(ref(db, `chats/${currentUser.uid}/info`), {
+                        name: currentUser.displayName,
+                        email: currentUser.email,
+                        photoURL: currentUser.photoURL,
+                        lastActive: Date.now(),
+                        status: 'open'
+                    });
+                }
+                
+                // Отправляем сообщение
+                await push(ref(db, `chats/${chatId}/messages`), {
+                    from: 'user', text: text, timestamp: Date.now(),
+                    userName: currentUser.displayName, userEmail: currentUser.email
+                });
+                
+                // Обновляем lastActive
+                await set(ref(db, `chats/${chatId}/info/lastActive`), Date.now());
+                
+                input.value = '';
+            } catch (error) {
+                console.error('Ошибка отправки сообщения:', error);
+                alert('Ошибка отправки сообщения: ' + error.message);
+            }
         };
 
         document.getElementById('chatInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') window.sendUserMessage();
         });
 
-        // ==========================================
-        // АДМИН-ПАНЕЛЬ
-        // ==========================================
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('admin')) setTimeout(() => openAdminLogin(), 500);
@@ -778,9 +789,9 @@
 
         window.openAdminPanel = function() {
             document.getElementById('adminPanel').classList.add('active');
-            showAdminSection('orders'); // По умолчанию открываем заказы
+            showAdminSection('orders');
             loadOrders();
-            loadSupportChats(); // Загружаем чаты в фоне
+            loadSupportChats();
         };
 
         window.closeAdminPanel = function() {
@@ -880,78 +891,112 @@
             } catch (error) { alert('Ошибка удаления: ' + error.message); }
         }
 
-        // ==========================================
-        // АДМИН ЧАТЫ ПОДДЕРЖКИ
-        // ==========================================
         let adminChatUnsubscribe = null;
         let currentChatUserId = null;
+        let currentChatId = null;
 
         function loadSupportChats() {
             const chatsRef = ref(db, 'chats');
             onValue(chatsRef, (snapshot) => {
-                const data = snapshot.val();
-                const tbody = document.getElementById('chatsTableBody');
-                
-                if (!data) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="no-orders">Чатов пока нет</td></tr>';
-                    return;
-                }
-
-                let chatList = [];
-                for (const userId in data) {
-                    const chatData = data[userId];
-                    const info = chatData.info || { name: 'Неизвестно', email: 'Нет email' };
+                try {
+                    const data = snapshot.val();
+                    const tbody = document.getElementById('chatsTableBody');
                     
-                    let lastMsg = { text: 'Нет сообщений', time: 0, from: 'unknown' };
-                    if (chatData.messages) {
-                        const msgs = Object.values(chatData.messages);
-                        if (msgs.length > 0) {
-                            msgs.sort((a, b) => b.timestamp - a.timestamp);
-                            lastMsg = msgs[0];
-                        }
+                    if (!data) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="no-orders">Чатов пока нет</td></tr>';
+                        return;
                     }
-                    chatList.push({ userId, info, lastMsg });
+
+                    let chatList = [];
+                    for (const chatId in data) {
+                        const chatData = data[chatId];
+                        const info = chatData.info || { name: 'Неизвестно', email: 'Нет email', status: 'open' };
+                        
+                        let lastMsg = { text: 'Нет сообщений', time: 0, from: 'unknown' };
+                        if (chatData.messages) {
+                            const msgs = Object.values(chatData.messages);
+                            if (msgs.length > 0) {
+                                msgs.sort((a, b) => b.timestamp - a.timestamp);
+                                lastMsg = msgs[0];
+                            }
+                        }
+                        chatList.push({ chatId, info, lastMsg });
+                    }
+
+                    chatList.sort((a, b) => b.lastMsg.time - a.lastMsg.time);
+
+                    tbody.innerHTML = chatList.map(chat => {
+                        const timeStr = new Date(chat.lastMsg.time).toLocaleString('ru-RU');
+                        const isUnread = chat.lastMsg.from === 'user' && chat.info.status !== 'closed';
+                        const rowStyle = isUnread ? 'background: #f0f8ff; font-weight: bold;' : '';
+                        const statusClass = chat.info.status === 'closed' ? 'status-closed' : 'status-new';
+                        const statusText = chat.info.status === 'closed' ? 'Закрыт' : 'Открыт';
+                        
+                        return `
+                            <tr style="${rowStyle}">
+                                <td><strong>${escapeHtml(chat.info.name)}</strong></td>
+                                <td>${escapeHtml(chat.info.email)}</td>
+                                <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    ${chat.lastMsg.from === 'user' ? '👤 ' : '🛡️ '}${escapeHtml(chat.lastMsg.text)}
+                                </td>
+                                <td style="white-space: nowrap;">${timeStr}</td>
+                                <td><span class="${statusClass}">${statusText}</span></td>
+                                <td>
+                                    <button class="btn-chat" onclick="openAdminChat('${chat.chatId}', '${escapeHtml(chat.info.name)}')">Открыть чат</button>
+                                    ${chat.info.status !== 'closed' ? `<button class="btn-close-chat" onclick="closeChat('${chat.chatId}')">Закрыть</button>` : ''}
+                                    <button class="btn-delete" onclick="deleteChat('${chat.chatId}')">Удалить</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } catch (error) {
+                    console.error('Ошибка загрузки чатов:', error);
+                    document.getElementById('chatsTableBody').innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">Ошибка загрузки чатов</td></tr>';
                 }
-
-                chatList.sort((a, b) => b.lastMsg.time - a.lastMsg.time);
-
-                tbody.innerHTML = chatList.map(chat => {
-                    const timeStr = new Date(chat.lastMsg.time).toLocaleString('ru-RU');
-                    const isUnread = chat.lastMsg.from === 'user';
-                    const rowStyle = isUnread ? 'background: #f0f8ff; font-weight: bold;' : '';
-                    
-                    return `
-                        <tr style="${rowStyle}">
-                            <td><strong>${escapeHtml(chat.info.name)}</strong></td>
-                            <td>${escapeHtml(chat.info.email)}</td>
-                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                ${chat.lastMsg.from === 'user' ? '👤 ' : '🛡️ '}${escapeHtml(chat.lastMsg.text)}
-                            </td>
-                            <td style="white-space: nowrap;">${timeStr}</td>
-                            <td>
-                                <button class="btn-chat" onclick="openAdminChat('${chat.userId}', '${escapeHtml(chat.info.name)}')">Открыть чат</button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
+            }, (error) => {
+                console.error('Firebase error:', error);
+                document.getElementById('chatsTableBody').innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">Ошибка подключения к Firebase</td></tr>';
             });
         }
 
-        window.openAdminChat = function(userId, userName) {
-            currentChatUserId = userId;
+        window.closeChat = async function(chatId) {
+            try {
+                await set(ref(db, `chats/${chatId}/info/status`), 'closed');
+                alert('Чат закрыт');
+            } catch (error) {
+                console.error('Ошибка закрытия чата:', error);
+                alert('Ошибка закрытия чата');
+            }
+        };
+
+        window.deleteChat = async function(chatId) {
+            if (!confirm('Удалить этот чат полностью?')) return;
+            try {
+                await remove(ref(db, `chats/${chatId}`));
+                alert('Чат удалён');
+            } catch (error) {
+                console.error('Ошибка удаления чата:', error);
+                alert('Ошибка удаления чата');
+            }
+        };
+
+        window.openAdminChat = function(chatId, userName) {
+            currentChatId = chatId;
+            currentChatUserId = userName;
             document.getElementById('adminChatTitle').textContent = `💬 Чат с ${userName}`;
             document.getElementById('adminChatWindow').classList.add('active');
-            loadAdminChat(userId);
+            loadAdminChat(chatId);
         };
 
         window.closeAdminChat = function() {
             document.getElementById('adminChatWindow').classList.remove('active');
             if (adminChatUnsubscribe) { adminChatUnsubscribe(); adminChatUnsubscribe = null; }
             currentChatUserId = null;
+            currentChatId = null;
         };
 
-        function loadAdminChat(userId) {
-            const chatRef = ref(db, `chats/${userId}/messages`);
+        function loadAdminChat(chatId) {
+            const chatRef = ref(db, `chats/${chatId}/messages`);
             if (adminChatUnsubscribe) adminChatUnsubscribe();
             
             adminChatUnsubscribe = onValue(chatRef, (snapshot) => {
@@ -969,27 +1014,37 @@
                     </div>
                 `).join('');
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, (error) => {
+                console.error('Ошибка загрузки админ чата:', error);
+                document.getElementById('adminChatMessages').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки</p>';
             });
         }
 
-        window.sendAdminMessage = function() {
+        window.sendAdminMessage = async function() {
             const input = document.getElementById('adminChatInput');
             const text = input.value.trim();
-            if (!text || !currentChatUserId) return;
+            if (!text || !currentChatId) {
+                alert('Ошибка: чат не выбран');
+                return;
+            }
             
-            push(ref(db, `chats/${currentChatUserId}/messages`), {
-                from: 'admin', text: text, timestamp: Date.now()
-            });
-            input.value = '';
+            try {
+                await push(ref(db, `chats/${currentChatId}/messages`), {
+                    from: 'admin', text: text, timestamp: Date.now()
+                });
+                // Обновляем lastActive
+                await set(ref(db, `chats/${currentChatId}/info/lastActive`), Date.now());
+                input.value = '';
+            } catch (error) {
+                console.error('Ошибка отправки:', error);
+                alert('Ошибка отправки сообщения: ' + error.message);
+            }
         };
 
         document.getElementById('adminChatInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') window.sendAdminMessage();
         });
 
-        // ==========================================
-        // УТИЛИТЫ
-        // ==========================================
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1067,4 +1122,4 @@
         });
     </script>
 </body>
-</html>
+            </html>
