@@ -23,6 +23,12 @@
         }
         .btn:hover { background: #4cae4c; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .btn-google {
+            background: white; color: #333; border: 2px solid #ddd;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 24px; font-size: 1rem; width: 100%;
+        }
+        .btn-google:hover { background: #f5f5f5; border-color: #999; }
 
         nav {
             position: fixed; top: 0; left: 0; width: 100%;
@@ -33,8 +39,1130 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
         nav.hidden { transform: translateY(-100%); }
-        nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; }
+        nav ul { list-style: none; display: flex; justify-content: center; gap: 2rem; align-items: center; flex-wrap: wrap; }
         nav a { color: white; text-decoration: none; font-weight: bold; transition: all 0.3s ease; text-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
+        nav a:hover { color: #fff4b8; text-shadow: 0 0 12px rgba(255, 244, 184, 0.8); }
+
+        .user-info {
+            display: flex; align-items: center; gap: 10px;
+            color: white; font-size: 0.9rem;
+        }
+        .user-info img {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid white;
+        }
+        .user-info .logout-btn {
+            background: rgba(255,255,255,0.2); border: none; color: white;
+            padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+        }
+        .user-info .logout-btn:hover { background: rgba(255,255,255,0.35); }
+
+        .nav-toggle {
+            margin-top: 0.3rem; background: transparent; border: none; color: white;
+            font-size: 0.9rem; cursor: pointer; padding: 4px 16px; border-radius: 0 0 6px 6px; 
+            transition: color 0.3s ease, background-color 0.3s ease;
+            display: flex; align-items: center; gap: 5px;
+            -webkit-user-select: none; user-select: none;
+            -webkit-touch-callout: none; touch-action: manipulation;
+        }
+        .nav-toggle:hover { background: rgba(255, 255, 255, 0.15); }
+        .nav-toggle .arrow { display: inline-block; transition: transform 0.4s ease; }
+        .nav-toggle .arrow.up { transform: rotate(180deg); }
+        .nav-toggle .hold-hint { font-size: 0.7rem; opacity: 0; transition: opacity 0.5s ease; color: #ffeb3b; }
+        .nav-toggle.holding .hold-hint { opacity: 1; }
+
+        .floating-toggle {
+            position: fixed; top: 0; right: 20px;
+            background: linear-gradient(135deg, rgba(155, 89, 255, 0.95), rgba(192, 132, 252, 0.95));
+            color: white; border: none; font-size: 0.9rem; cursor: pointer; padding: 6px 14px;
+            border-radius: 0 0 8px 8px; z-index: 1001; transition: all 0.3s ease;
+            opacity: 0; pointer-events: none; transform: translateY(-100%);
+            box-shadow: 0 4px 15px rgba(155, 89, 255, 0.5);
+            display: flex; align-items: center; gap: 5px;
+            -webkit-user-select: none; user-select: none;
+            -webkit-touch-callout: none; touch-action: manipulation;
+        }
+        .floating-toggle.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .floating-toggle .hold-hint { font-size: 0.7rem; opacity: 0; transition: opacity 0.5s ease; color: #ffeb3b; }
+        .floating-toggle.holding .hold-hint { opacity: 1; }
+
+        .services { padding: 5rem 2rem; background: #f9f9f9; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: #2c3e50; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .service-card {
+            background: white; padding: 2rem; border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .service-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 5px; margin-bottom: 1rem; }
+        .service-card h3 { color: #9b59ff; margin-bottom: 1rem; font-size: 1.5rem; }
+        .service-card p { color: #666; margin-bottom: 1rem; }
+        .price { font-size: 1.8rem; color: #2c3e50; font-weight: bold; margin-top: 1rem; }
+        .service-card.custom { background: linear-gradient(135deg, #ffffff 0%, #f5f0ff 100%); border: 2px dashed #9b59ff; position: relative; }
+        .service-card.custom::before {
+            content: "✨ Любые пожелания"; position: absolute; top: -12px; right: 20px;
+            background: linear-gradient(135deg, #9b59ff, #c084fc); color: white;
+            padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
+        }
+
+        .order { padding: 5rem 2rem; background: #f9f9f9; }
+        .order-form { max-width: 600px; margin: 0 auto; background: white; padding: 3rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px;
+            font-size: 1rem; transition: border-color 0.3s ease; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #9b59ff; box-shadow: 0 0 0 3px rgba(155, 89, 255, 0.15);
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-note {
+            text-align: center; color: #666; font-size: 0.95rem; margin-top: 1rem;
+            padding: 1rem; background: #f5f0ff; border-radius: 8px; border-left: 4px solid #9b59ff; line-height: 1.5;
+        }
+        .form-note strong { color: #2c3e50; }
+
+        .submit-status {
+            margin-top: 1rem; padding: 1rem; border-radius: 8px;
+            text-align: center; font-size: 0.95rem; display: none;
+        }
+        .submit-status.loading { display: block; background: #e3f2fd; color: #1565c0; border-left: 4px solid #2196f3; }
+        .submit-status.error { display: block; background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+        .submit-status.success { display: block; background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+
+        footer { background: #2c3e50; color: white; text-align: center; padding: 2rem; }
+        footer p { margin: 0.5rem 0; }
+        footer a { color: #c084fc; text-decoration: none; transition: color 0.3s ease; }
+        footer a:hover { color: #e0b3ff; text-decoration: underline; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            z-index: 10002; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 15px; text-align: center;
+            max-width: 400px; width: 90%; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-icon { font-size: 4rem; margin-bottom: 1rem; animation: bounceIn 0.6s ease; }
+        .modal-content h3 { color: #2c3e50; margin-bottom: 0.5rem; font-size: 1.5rem; }
+        .modal-content p { color: #666; line-height: 1.5; margin-bottom: 1.5rem; }
+
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        .admin-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;
+        }
+        .admin-overlay.active { display: flex; }
+        .admin-login { background: white; padding: 2rem; border-radius: 10px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .admin-login h3 { margin-bottom: 1rem; color: #2c3e50; }
+        .admin-login input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem; margin-bottom: 1rem; }
+        .admin-login input:focus { outline: none; border-color: #9b59ff; }
+        .admin-login .error { color: red; font-size: 0.9rem; display: none; margin-bottom: 0.5rem; }
+
+        .admin-panel {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f0f0f5; z-index: 10000; overflow-y: auto;
+        }
+        .admin-panel.active { display: block; }
+        .admin-header {
+            background: linear-gradient(135deg, #9b59ff, #c084fc); color: white;
+            padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(155, 89, 255, 0.4); flex-wrap: wrap; gap: 10px;
+        }
+        .admin-header h2 { font-size: 1.5rem; }
+        .admin-close {
+            background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 20px;
+            border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background 0.3s; margin-left: 10px;
+        }
+        .admin-close:hover { background: rgba(255,255,255,0.35); }
+        .admin-body { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .stat-card .number { font-size: 2.5rem; font-weight: bold; color: #9b59ff; }
+        .stat-card .label { color: #666; font-size: 0.95rem; }
+        .admin-table-wrapper { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { background: #f5f0ff; color: #2c3e50; padding: 1rem; text-align: left; font-size: 0.9rem; border-bottom: 2px solid #e0d4f5; white-space: nowrap; }
+        .admin-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #444; vertical-align: middle; }
+        .admin-table tr:hover td { background: #faf8ff; }
+        .status-new { background: #fff3cd; color: #856404; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .status-progress { background: #cce5ff; color: #004085; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .status-done { background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+        .no-orders { text-align: center; padding: 3rem; color: #999; font-size: 1.1rem; }
+        .btn-delete { background: #ff4757; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; }
+        .btn-delete:hover { background: #ff6b81; }
+        .btn-chat { background: #9b59ff; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: background 0.3s; margin-right: 5px; }
+        .btn-chat:hover { background: #8040e0; }
+
+        .chat-widget {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9998;
+        }
+        .chat-button {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: linear-gradient(135deg, #9b59ff, #c084fc);
+            border: none; color: white; font-size: 1.8rem;
+            cursor: pointer; box-shadow: 0 4px 20px rgba(155, 89, 255, 0.5);
+            transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chat-button:hover { transform: scale(1.1); }
+        .chat-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: #ff4757; color: white; border-radius: 50%;
+            width: 24px; height: 24px; font-size: 0.8rem;
+            display: none; align-items: center; justify-content: center;
+            font-weight: bold;
+        }
+        .chat-badge.visible { display: flex; }
+
+        .chat-window {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 350px; max-width: calc(100vw - 40px);
+            height: 500px; max-height: calc(100vh - 120px);
+            background: white; border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none; flex-direction: column;
+            z-index: 9998; overflow: hidden;
+        }
+        .chat-window.active { display: flex; }
+        .chat-header {
+            background: linear-gradient(135deg, #9b59ff, #c084fc);
+            color: white; padding: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .chat-header h4 { font-size: 1rem; }
+        .chat-close {
+            background: transparent; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer;
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 1rem;
+            background: #f5f5f5; display: flex; flex-direction: column; gap: 10px;
+        }
+        .chat-message {
+            max-width: 80%; padding: 10px 14px; border-radius: 15px;
+            font-size: 0.9rem; line-height: 1.4; word-wrap: break-word;
+        }
+        .chat-message.user {
+            align-self: flex-end;
+            background: #9b59ff; color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.admin {
+            align-self: flex-start;
+            background: white; color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .chat-message .time {
+            font-size: 0.7rem; opacity: 0.7; margin-top: 4px;
+        }
+        .chat-input-area {
+            padding: 10px; border-top: 1px solid #eee;
+            display: flex; gap: 8px;
+        }
+        .chat-input-area input {
+            flex: 1; padding: 10px; border: 2px solid #ddd;
+            border-radius: 20px; font-size: 0.9rem;
+        }
+        .chat-input-area input:focus { outline: none; border-color: #9b59ff; }
+        .chat-input-area button {
+            background: #9b59ff; color: white; border: none;
+            padding: 10px 16px; border-radius: 20px; cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .chat-input-area button:disabled { background: #ccc; }
+
+        .admin-chat-window {
+            position: fixed; top: 0; right: 0; width: 400px; max-width: 100vw;
+            height: 100%; background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            display: none; flex-direction: column;
+            z-index: 10001;
+        }
+        .admin-chat-window.active { display: flex; }
+        .admin-chat-header {
+            background: linear-gradient(135deg, #9b59ff, #c084fc);
+            color: white; padding: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .admin-chat-messages {
+            flex: 1; overflow-y: auto; padding: 1rem;
+            background: #f5f5f5; display: flex; flex-direction: column; gap: 10px;
+        }
+        .admin-chat-input {
+            padding: 10px; border-top: 1px solid #eee;
+            display: flex; gap: 8px;
+        }
+        .admin-chat-input input {
+            flex: 1; padding: 10px; border: 2px solid #ddd;
+            border-radius: 20px; font-size: 0.9rem;
+        }
+        .admin-chat-input button {
+            background: #9b59ff; color: white; border: none;
+            padding: 10px 16px; border-radius: 20px; cursor: pointer;
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.2rem; }
+            nav ul { flex-direction: column; gap: 1rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .admin-body { padding: 1rem; }
+            .admin-chat-window { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="mainNav" class="hidden">
+        <ul>
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#order">Заказать</a></li>
+            <li><a href="#contact">Контакты</a></li>
+            <li id="navUserInfo"></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Скрыть/Показать меню">
+            <span class="arrow up" id="navArrow">▼</span>
+            <span class="hold-hint">Держите для входа...</span>
+        </button>
+    </nav>
+
+    <button class="floating-toggle visible" id="floatingToggle" aria-label="Показать меню">
+        <span class="arrow">▼</span>
+        <span class="hold-hint">Держите для входа...</span>
+    </button>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Профессиональные услуги Minecraft</h1>
+            <p>Создаём серверы, строим миры, устанавливаем моды</p>
+            <a href="#order" class="btn">Заказать услугу</a>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Наши услуги</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <img src="https://image.qwenlm.ai/public_source/bddff025-b01c-40f2-810f-e32c4287489e/19d16cad7-c6b4-4679-bac0-80e8368140b2.png" alt="Настройка сервера">
+                    <h3>Настройка сервера</h3>
+                    <p>Полная установка и настройка Minecraft сервера с оптимальными параметрами</p>
+                    <div class="price">от 1 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>🏗️ Строительство</h3>
+                    <p>Создание уникальных построек, городов, замков и целых миров по вашему дизайну</p>
+                    <div class="price">от 500 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>⚙️ Установка модов</h3>
+                    <p>Установка и настройка модов, плагинов, создание модпаков под ваши требования</p>
+                    <div class="price">от 900 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>🎨 Создание скинов</h3>
+                    <p>Разработка уникальных скинов и текстур для персонажей и предметов</p>
+                    <div class="price">от 500 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>🔧 Техническая поддержка</h3>
+                    <p>Регулярное обслуживание сервера, обновление ПО, решение технических проблем</p>
+                    <div class="price">от 1 800 ₽/мес</div>
+                </div>
+                <div class="service-card">
+                    <h3>🎓 Обучение</h3>
+                    <p>Персональные уроки по Minecraft, обучение администрированию серверов</p>
+                    <div class="price">от 500 ₽/час</div>
+                </div>
+                <div class="service-card custom">
+                    <h3>🎯 Кастомная услуга</h3>
+                    <p>Не нашли то, что нужно? Выполним любое задание по Minecraft под ваш проект</p>
+                    <div class="price">от 500 ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="order" class="order">
+        <div class="container">
+            <h2 class="section-title">Оформить заказ</h2>
+            <form class="order-form" id="orderForm">
+                <div class="form-group">
+                    <label for="name">Ваше имя *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="service">Выберите услугу *</label>
+                    <select id="service" name="service" required>
+                        <option value="">-- Выберите услугу --</option>
+                        <option value="Настройка сервера">Настройка сервера - от 1 500 ₽</option>
+                        <option value="Строительство">Строительство - от 500 ₽</option>
+                        <option value="Установка модов">Установка модов - от 900 ₽</option>
+                        <option value="Создание скинов">Создание скинов - от 500 ₽</option>
+                        <option value="Техподдержка">Техподдержка - от 1 800 ₽/мес</option>
+                        <option value="Обучение">Обучение - от 500 ₽/час</option>
+                        <option value="Кастомная услуга">Кастомная услуга - от 500 ₽</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Опишите задачу *</label>
+                    <textarea id="message" name="message" placeholder="Расскажите подробнее, что нужно сделать..." required></textarea>
+                </div>
+                <button type="submit" class="btn" id="submitBtn" style="width: 100%;">Отправить заказ</button>
+                
+                <div class="submit-status" id="submitStatus"></div>
+                
+                <div class="form-note">
+                    <strong>📞 Мы свяжемся с вами</strong> в ближайшее время по указанным контактам, чтобы обсудить все детали.
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <h3>Контакты</h3>
+            <p>📧 Email: <a href="mailto:a1945rud@gmail.com">a1945rud@gmail.com</a></p>
+            <p>📱 Телефон: <a href="tel:+79953950115">+7 (995) 395-01-15</a></p>
+            <p style="margin-top: 2rem;">© 2026 Minecraft Услуги. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно успеха -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h3>Заказ успешно отправлен!</h3>
+            <p>Мы получили вашу заявку и свяжемся с вами в ближайшее время.</p>
+            <button class="btn" onclick="closeModal('successModal')" style="width: 100%;">Отлично!</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно входа -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-icon">🔐</div>
+            <h3>Войдите через Google</h3>
+            <p>Чтобы отправить заказ или написать в поддержку, нужно войти в аккаунт.</p>
+            <button class="btn btn-google" onclick="signInWithGoogle()">
+                <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2c-.4.4 6.6-4.8 6.6-14.8 0-1.3-.1-2.3-.4-3.5z"/></svg>
+                Войти через Google
+            </button>
+            <br>
+            <button onclick="closeModal('loginModal')" style="background:none; border:none; color:#999; cursor:pointer; margin-top: 10px;">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Вход в админку -->
+    <div class="admin-overlay" id="adminOverlay">
+        <div class="admin-login">
+            <h3>🔐 Вход в админ-панель</h3>
+            <p class="error" id="loginError">Неверный пароль!</p>
+            <input type="password" id="adminPassword" placeholder="Введите пароль" autocomplete="off">
+            <br>
+            <button class="btn" onclick="loginAdmin()" style="width:100%; padding:10px;">Войти</button>
+            <br><br>
+            <button onclick="closeAdminLogin()" style="background:none; border:none; color:#999; cursor:pointer;">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Админ-панель -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>📋 Панель заказов</h2>
+            <div>
+                <button class="admin-close" onclick="loadOrders()">🔄 Обновить</button>
+                <button class="admin-close" onclick="closeAdminPanel()">✕ Закрыть</button>
+            </div>
+        </div>
+        <div class="admin-body">
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="number" id="totalOrders">0</div>
+                    <div class="label">Всего заказов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="newOrders">0</div>
+                    <div class="label">Новых</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="progressOrders">0</div>
+                    <div class="label">В процессе</div>
+                </div>
+            </div>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Дата</th>
+                            <th>Имя / Email</th>
+                            <th>Телефон</th>
+                            <th>Услуга</th>
+                            <th>Описание</th>
+                            <th>Статус</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="8" class="no-orders">Загрузка заказов...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Админ чат окно -->
+    <div class="admin-chat-window" id="adminChatWindow">
+        <div class="admin-chat-header">
+            <h4 id="adminChatTitle">💬 Чат с пользователем</h4>
+            <button class="admin-close" onclick="closeAdminChat()">✕</button>
+        </div>
+        <div class="admin-chat-messages" id="adminChatMessages"></div>
+        <div class="admin-chat-input">
+            <input type="text" id="adminChatInput" placeholder="Напишите сообщение...">
+            <button onclick="sendAdminMessage()">Отправить</button>
+        </div>
+    </div>
+
+    <!-- ЧАТ-ВИДЖЕТ -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-button" onclick="openUserChat()" title="Чат с поддержкой">💬</button>
+        <div class="chat-badge" id="chatBadge">0</div>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h4>💬 Поддержка</h4>
+            <button class="chat-close" onclick="closeUserChat()">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Напишите сообщение...">
+            <button onclick="sendUserMessage()">➤</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getDatabase, ref, push, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+        // ✅ ВАШ FIREBASE КОНФИГ
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3fZC3oOSE7IkxqCaAK_0ap_-PuTXzj38",
+            authDomain: "minecraft-services-1be6d.firebaseapp.com",
+            databaseURL: "https://minecraft-services-1be6d-default-rtdb.firebaseio.com",
+            projectId: "minecraft-services-1be6d",
+            storageBucket: "minecraft-services-1be6d.firebasestorage.app",
+            messagingSenderId: "1007478442022",
+            appId: "1:1007478442022:web:2251b699db42eb7343fee7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let pendingAction = null;
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            updateUserInfo();
+            
+            if (user && pendingAction) {
+                const action = pendingAction;
+                pendingAction = null;
+                closeModal('loginModal');
+                if (action.type === 'order') {
+                    submitOrderAfterLogin(action.data);
+                } else if (action.type === 'chat') {
+                    openUserChat();
+                }
+            }
+            
+            if (user && document.getElementById('chatWindow').classList.contains('active')) {
+                loadUserChat();
+            }
+        });
+
+        window.signInWithGoogle = async function() {
+            try {
+                await signInWithPopup(auth, googleProvider);
+            } catch (error) {
+                console.error('Ошибка входа:', error);
+                alert('Ошибка входа: ' + error.message);
+            }
+        };
+
+        window.signOutUser = async function() {
+            await signOut(auth);
+            currentUser = null;
+            updateUserInfo();
+        };
+
+        function updateUserInfo() {
+            const navUserInfo = document.getElementById('navUserInfo');
+            if (currentUser) {
+                navUserInfo.innerHTML = `
+                    <div class="user-info">
+                        <img src="${currentUser.photoURL}" alt="${currentUser.displayName}">
+                        <span>${currentUser.displayName.split(' ')[0]}</span>
+                        <button class="logout-btn" onclick="signOutUser()">Выйти</button>
+                    </div>
+                `;
+            } else {
+                navUserInfo.innerHTML = '';
+            }
+        }
+
+        // ==========================================
+        // ОТПРАВКА ЗАКАЗА
+        // ==========================================
+        const API_URL = 'https://sheetdb.io/api/v1/3u128ld6pkti1';
+        const ADMIN_PASSWORD = 't0gether';
+        const ADMIN_EMAIL = 'a1945rud@gmail.com';
+
+        const orderForm = document.getElementById('orderForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitStatus = document.getElementById('submitStatus');
+
+        function showStatus(message, type) {
+            submitStatus.textContent = message;
+            submitStatus.className = 'submit-status ' + type;
+        }
+
+        orderForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!orderForm.checkValidity()) {
+                showStatus('❌ Пожалуйста, заполните все обязательные поля', 'error');
+                orderForm.reportValidity();
+                return;
+            }
+
+            if (!currentUser) {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    service: document.getElementById('service').value,
+                    message: document.getElementById('message').value
+                };
+                pendingAction = { type: 'order', data: formData };
+                openModal('loginModal');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
+            };
+            submitOrderAfterLogin(formData);
+        });
+
+        async function submitOrderAfterLogin(formData) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            showStatus('⏳ Отправка заказа...', 'loading');
+
+            const orderData = {
+                id: Date.now().toString(),
+                date: new Date().toLocaleString('ru-RU'),
+                name: formData.name,
+                email: currentUser.email,
+                phone: formData.phone || '—',
+                service: formData.service,
+                message: formData.message,
+                status: 'Новый',
+                userId: currentUser.uid
+            };
+
+            console.log('📤 Отправка заказа:', orderData);
+            let sheetSuccess = false;
+
+            try {
+                showStatus('⏳ Сохранение в таблицу...', 'loading');
+                const sheetResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ data: orderData })
+                });
+
+                if (sheetResponse.ok) {
+                    sheetSuccess = true;
+                    console.log('✅ Заказ сохранён');
+                } else {
+                    throw new Error(`SheetDB ошибка: ${sheetResponse.status}`);
+                }
+            } catch (error) {
+                console.error('❌ Ошибка:', error);
+                showStatus(`❌ Ошибка: ${error.message}`, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить заказ';
+                return;
+            }
+
+            try {
+                showStatus('📧 Отправка на почту...', 'loading');
+                const emailFormData = new FormData();
+                emailFormData.append('name', orderData.name);
+                emailFormData.append('email', orderData.email);
+                emailFormData.append('phone', orderData.phone);
+                emailFormData.append('service', orderData.service);
+                emailFormData.append('message', orderData.message);
+                emailFormData.append('_subject', '🎮 Новый заказ с сайта Minecraft!');
+                emailFormData.append('_captcha', 'false');
+                emailFormData.append('_template', 'table');
+                emailFormData.append('_cc', ADMIN_EMAIL);
+
+                await fetch(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {
+                    method: 'POST',
+                    body: emailFormData
+                });
+                console.log('✅ Email отправлен');
+            } catch (error) {
+                console.warn('⚠️ Ошибка email:', error);
+            }
+
+            if (sheetSuccess) {
+                showStatus('✅ Заказ успешно сохранён!', 'success');
+                openModal('successModal');
+                orderForm.reset();
+                setTimeout(() => { submitStatus.style.display = 'none'; }, 5000);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить заказ';
+        }
+
+        // ==========================================
+        // ЧАТ ПОЛЬЗОВАТЕЛЯ
+        // ==========================================
+        let chatUnsubscribe = null;
+
+        window.openUserChat = function() {
+            if (!currentUser) {
+                pendingAction = { type: 'chat' };
+                openModal('loginModal');
+                return;
+            }
+            document.getElementById('chatWindow').classList.add('active');
+            loadUserChat();
+        };
+
+        window.closeUserChat = function() {
+            document.getElementById('chatWindow').classList.remove('active');
+            if (chatUnsubscribe) {
+                chatUnsubscribe();
+                chatUnsubscribe = null;
+            }
+        };
+
+        function loadUserChat() {
+            if (!currentUser) return;
+            const chatRef = ref(db, `chats/${currentUser.uid}/messages`);
+            if (chatUnsubscribe) chatUnsubscribe();
+            
+            chatUnsubscribe = onValue(chatRef, (snapshot) => {
+                const messagesDiv = document.getElementById('chatMessages');
+                const data = snapshot.val();
+                
+                if (!data) {
+                    messagesDiv.innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Начните разговор с поддержкой 👋</p>';
+                    return;
+                }
+                
+                const messages = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
+                messagesDiv.innerHTML = messages.map(msg => `
+                    <div class="chat-message ${msg.from === 'user' ? 'user' : 'admin'}">
+                        ${escapeHtml(msg.text)}
+                        <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `).join('');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            });
+        }
+
+        window.sendUserMessage = function() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || !currentUser) return;
+            
+            const messagesRef = ref(db, `chats/${currentUser.uid}/messages`);
+            push(messagesRef, {
+                from: 'user',
+                text: text,
+                timestamp: Date.now(),
+                userName: currentUser.displayName,
+                userEmail: currentUser.email
+            });
+            
+            set(ref(db, `chats/${currentUser.uid}/info`), {
+                name: currentUser.displayName,
+                email: currentUser.email,
+                photoURL: currentUser.photoURL,
+                lastActive: Date.now()
+            });
+            input.value = '';
+        };
+
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') window.sendUserMessage();
+        });
+
+        // ==========================================
+        // АДМИН-ПАНЕЛЬ
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin')) {
+                setTimeout(() => openAdminLogin(), 500);
+            }
+        });
+
+        window.openAdminLogin = function() {
+            document.getElementById('adminOverlay').classList.add('active');
+            document.getElementById('adminPassword').focus();
+        };
+
+        window.closeAdminLogin = function() {
+            document.getElementById('adminOverlay').classList.remove('active');
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        };
+
+        window.loginAdmin = function() {
+            const pwd = document.getElementById('adminPassword').value;
+            if (pwd === ADMIN_PASSWORD) {
+                closeAdminLogin();
+                openAdminPanel();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+            }
+        };
+
+        document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') window.loginAdmin();
+        });
+
+        window.openAdminPanel = function() {
+            document.getElementById('adminPanel').classList.add('active');
+            loadOrders();
+        };
+
+        window.closeAdminPanel = function() {
+            document.getElementById('adminPanel').classList.remove('active');
+        };
+
+        async function loadOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '<tr><td colspan="8" class="no-orders">Загрузка данных...</td></tr>';
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                let orders = await response.json();
+
+                const uniqueMap = new Map();
+                orders.forEach(order => {
+                    const id = String(order.id);
+                    const existing = uniqueMap.get(id);
+                    if (!existing || order.date > existing.date) {
+                        uniqueMap.set(id, order);
+                    }
+                });
+                
+                const activeOrders = Array.from(uniqueMap.values()).filter(order => {
+                    return order.deleted !== 'true' && order.status !== 'Удален';
+                });
+
+                document.getElementById('totalOrders').textContent = activeOrders.length;
+                document.getElementById('newOrders').textContent = activeOrders.filter(o => o.status === 'Новый').length;
+                document.getElementById('progressOrders').textContent = activeOrders.filter(o => o.status === 'В процессе').length;
+
+                if (activeOrders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="no-orders">Заказов пока нет</td></tr>';
+                    return;
+                }
+
+                activeOrders.reverse();
+
+                tbody.innerHTML = activeOrders.map((order, index) => {
+                    let statusClass = 'status-new';
+                    let statusText = '🆕 Новый';
+                    
+                    if (order.status === 'В процессе') {
+                        statusClass = 'status-progress';
+                        statusText = '⚙️ В процессе';
+                    } else if (order.status === 'Готов') {
+                        statusClass = 'status-done';
+                        statusText = '✅ Готов';
+                    }
+                    
+                    return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="white-space:nowrap;">${order.date || '—'}</td>
+                            <td><strong>${escapeHtml(order.name || '')}</strong><br><small style="color:#999;">${escapeHtml(order.email || '')}</small></td>
+                            <td>${escapeHtml(order.phone || '—')}</td>
+                            <td>${escapeHtml(order.service || '')}</td>
+                            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(order.message || '')}">${escapeHtml(order.message || '')}</td>
+                            <td>
+                                <span class="${statusClass}" style="cursor:pointer;" onclick="toggleStatus('${order.id}', '${order.status}')">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn-chat" onclick="openAdminChat('${order.userId || order.email}', '${escapeHtml(order.name || '')}')">💬 Чат</button>
+                                <button class="btn-delete" onclick="deleteOrder('${order.id}')">Удалить</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('❌ Ошибка загрузки:', error);
+                tbody.innerHTML = '<tr><td colspan="8" class="no-orders" style="color:red;">Ошибка: ' + error.message + '</td></tr>';
+            }
+        }
+
+        async function toggleStatus(id, currentStatus) {
+            let newStatus;
+            if (currentStatus === 'Новый') newStatus = 'В процессе';
+            else if (currentStatus === 'В процессе') newStatus = 'Готов';
+            else newStatus = 'Новый';
+            
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                const orders = await response.json();
+                const order = orders.find(o => String(o.id) === String(id));
+                if (!order) { alert('Заказ не найден'); return; }
+                
+                order.status = newStatus;
+                order.date = new Date().toLocaleString('ru-RU');
+                
+                const addResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ data: order })
+                });
+                if (addResponse.ok) loadOrders();
+                else throw new Error(`Ошибка ${addResponse.status}`);
+            } catch (error) {
+                alert('Ошибка обновления: ' + error.message);
+            }
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('Удалить этот заказ?')) return;
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`API ошибка: ${response.status}`);
+                const orders = await response.json();
+                const order = orders.find(o => String(o.id) === String(id));
+                if (!order) { alert('Заказ не найден'); return; }
+                
+                order.deleted = 'true';
+                order.status = 'Удален';
+                order.date = new Date().toLocaleString('ru-RU');
+                
+                const deleteResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ data: order })
+                });
+                if (deleteResponse.ok) loadOrders();
+                else throw new Error(`Ошибка ${deleteResponse.status}`);
+            } catch (error) {
+                alert('Ошибка удаления: ' + error.message);
+            }
+        }
+
+        // ==========================================
+        // АДМИН ЧАТ
+        // ==========================================
+        let adminChatUnsubscribe = null;
+
+        window.openAdminChat = function(userId, userName) {
+            window.currentChatUserId = userId;
+            document.getElementById('adminChatTitle').textContent = `💬 Чат с ${userName}`;
+            document.getElementById('adminChatWindow').classList.add('active');
+            loadAdminChat(userId);
+        };
+
+        window.closeAdminChat = function() {
+            document.getElementById('adminChatWindow').classList.remove('active');
+            if (adminChatUnsubscribe) {
+                adminChatUnsubscribe();
+                adminChatUnsubscribe = null;
+            }
+            window.currentChatUserId = null;
+        };
+
+        function loadAdminChat(userId) {
+            const chatRef = ref(db, `chats/${userId}/messages`);
+            if (adminChatUnsubscribe) adminChatUnsubscribe();
+            
+            adminChatUnsubscribe = onValue(chatRef, (snapshot) => {
+                const messagesDiv = document.getElementById('adminChatMessages');
+                const data = snapshot.val();
+                
+                if (!data) {
+                    messagesDiv.innerHTML = '<p style="text-align:center; color:#999; margin-top: 20px;">Сообщений пока нет</p>';
+                    return;
+                }
+                
+                const messages = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
+                messagesDiv.innerHTML = messages.map(msg => `
+                    <div class="chat-message ${msg.from === 'admin' ? 'user' : 'admin'}" style="${msg.from === 'admin' ? 'align-self: flex-end; background: #9b59ff; color: white;' : ''}">
+                        ${escapeHtml(msg.text)}
+                        <div class="time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `).join('');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            });
+        }
+
+        window.sendAdminMessage = function() {
+            const input = document.getElementById('adminChatInput');
+            const text = input.value.trim();
+            if (!text || !window.currentChatUserId) return;
+            
+            const messagesRef = ref(db, `chats/${window.currentChatUserId}/messages`);
+            push(messagesRef, {
+                from: 'admin',
+                text: text,
+                timestamp: Date.now()
+            });
+            input.value = '';
+        };
+
+        document.getElementById('adminChatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') window.sendAdminMessage();
+        });
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ==========================================
+        // НАВИГАЦИЯ И МОДАЛКИ
+        // ==========================================
+        window.openModal = function(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        };
+
+        window.closeModal = function(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        };
+
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    setTimeout(() => { this.style.display = 'none'; }, 300);
+                }
+            });
+        });
+
+        let pressTimer;
+        let adminOpened = false;
+        const HOLD_DURATION = 15000;
+
+        function startHold(e) {
+            adminOpened = false;
+            this.classList.add('holding');
+            pressTimer = setTimeout(() => {
+                adminOpened = true;
+                this.classList.remove('holding');
+                openAdminLogin();
+            }, HOLD_DURATION);
+            setTimeout(() => {
+                if (pressTimer) this.style.color = '#ffeb3b';
+            }, 3000);
+        }
+
+        function cancelHold(e) {
+            clearTimeout(pressTimer);
+            this.classList.remove('holding');
+            this.style.color = '';
+        }
+
+        const toggleButtons = [document.getElementById('navToggle'), document.getElementById('floatingToggle')];
+        toggleButtons.forEach(btn => {
+            btn.addEventListener('mousedown', startHold);
+            btn.addEventListener('mouseup', cancelHold);
+            btn.addEventListener('mouseleave', cancelHold);
+            btn.addEventListener('touchstart', startHold, {passive: true});
+            btn.addEventListener('touchend', cancelHold);
+            btn.addEventListener('touchcancel', cancelHold);
+            btn.addEventListener('click', function(e) {
+                if (adminOpened) {
+                    e.preventDefault();
+                    adminOpened = false;
+                    return;
+                }
+                if (btn.id === 'navToggle') hideNav();
+                else showNav();
+            });
+        });
+
+        const mainNav = document.getElementById('mainNav');
+        const navArrow = document.getElementById('navArrow');
+        const floatingToggle = document.getElementById('floatingToggle');
+
+        function hideNav() {
+            mainNav.classList.add('hidden');
+            navArrow.classList.remove('up');
+            setTimeout(() => floatingToggle.classList.add('visible'), 300);
+        }
+        function showNav() {
+            floatingToggle.classList.remove('visible');
+            mainNav.classList.remove('hidden');
+            navArrow.classList.add('up');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>        nav a { color: white; text-decoration: none; font-weight: bold; transition: all 0.3s ease; text-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
         nav a:hover { color: #fff4b8; text-shadow: 0 0 12px rgba(255, 244, 184, 0.8); }
 
         .nav-toggle {
